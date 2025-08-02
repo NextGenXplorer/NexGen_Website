@@ -1,14 +1,9 @@
-<<<<<<< HEAD
-# NexGen_Website
-NexGen website
-=======
 # NextGenXplorer
 
 > Charting the course of tomorrow's technology, today.
 
 Welcome to the official repository for **NextGenXplorer**, a digital think tank and media hub dedicated to exploring the future of technology and its impact on our world.
 
-![NextGenXplorer Home Page](https://placehold.co/800x400.png)
 
 ## Our Mission
 
@@ -92,8 +87,3 @@ The `content.json` file has the following structure:
   ]
 }
 ```
-
----
-
-This project was built with [Firebase Studio](https://studio.firebase.google.com).
->>>>>>> e81d2c7 (Uploading the NexGen_Website source code)
