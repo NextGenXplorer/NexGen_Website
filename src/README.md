@@ -87,5 +87,3 @@ The `content.json` file has the following structure:
   ]
 }
 ```
-
----
