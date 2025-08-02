@@ -1,6 +1,7 @@
 # NextGenXplorer
 
 > Charting the course of tomorrow's technology, today.
+> [![Netlify Status](https://api.netlify.com/api/v1/badges/ea28765b-ed2e-446e-9d83-898a1aaf5b90/deploy-status)](https://app.netlify.com/projects/nextgenxplorer/deploys)
 
 Welcome to the official repository for **NextGenXplorer**, a digital think tank and media hub dedicated to exploring the future of technology and its impact on our world.
 
