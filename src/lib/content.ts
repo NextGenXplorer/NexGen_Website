@@ -28,6 +28,7 @@ const iconMap: { [key: string]: LucideIcon } = {
   Instagram: Instagram,
   GitHub: Github,
   Telegram: Send,
+  'Telegram Group': Send,
   'Telegram Channel': Send,
 };
 
