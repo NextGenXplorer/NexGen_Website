@@ -8,6 +8,9 @@ import { ThemeProvider } from '@/components/theme-provider';
 export const metadata: Metadata = {
   title: 'NextGenXplorer | The Future is Now',
   description: 'NextGenXplorer: Charting the course of tomorrow\'s technology, today.',
+  icons: {
+    icon: 'https://avatars.githubusercontent.com/u/223625668?s=400&u=3760cffbf5cec0e95bc14deac3725202dfa2eb8e&v=4',
+  },
 };
 
 export default function RootLayout({

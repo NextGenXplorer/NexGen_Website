@@ -18,12 +18,12 @@ export default async function YouTubePage() {
   const youtubeSocial = socials.find((s) => s.name === 'YouTube');
 
   return (
-    <div className="container mx-auto px-4 py-8 md:py-16 animate-in fade-in duration-500">
+    <div className="container mx-auto px-4 py-16 md:py-24 animate-in fade-in duration-500">
       <div className="text-center mb-12">
-        <h1 className="text-4xl md:text-5xl font-bold font-headline mb-4">
+        <h1 className="text-fluid-h2 font-bold font-headline mb-4">
           The Archives
         </h1>
-        <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
+        <p className="text-fluid-p text-muted-foreground max-w-3xl mx-auto">
           Explore our repository of deep dives into future-forward technologies and concepts.
         </p>
       </div>
