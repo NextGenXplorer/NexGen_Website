@@ -4,26 +4,7 @@
     "goal": "Our mission is to decode the future. We dissect and debate the technological forces, from artificial intelligence to quantum leaps, that are actively reshaping our world and defining the next chapter of human history.",
     "about": "NextGenXplorer is a digital think tank and media hub. We produce visually striking, deeply researched content that demystifies the complex and provokes critical thought about the trajectory of technology and civilization."
   },
-  "videos": [
-    {
-      "youtubeUrl": "https://www.youtube.com/watch?v=0sK4uYNbm6w",
-      "relatedLinks": [
-        {
-          "label": "Link for video",
-          "url": "https://google.com"
-        }
-      ]
-    },
-    {
-      "youtubeUrl": "https://www.youtube.com/watch?v=Uj5RT6-xk7g",
-      "relatedLinks": [
-        {
-          "label": "Link",
-          "url": "https://example.com"
-        }
-      ]
-    }
-  ],
+  "videos": [],
   "socials": [
     {
       "name": "YouTube",
@@ -41,29 +22,29 @@
       "handle": "NextGenXplorer"
     },
     {
-      "name": "Telegram",
+      "name": "Telegram Group",
       "url": "https://t.me/neXgenXplorer",
       "handle": "@neXgenXplorer"
     },
     {
-      "name": "Telegram Group",
+      "name": "Telegram Channel",
       "url": "https://t.me/neXgenXplorerr",
       "handle": "Community Chat"
     }
   ],
   "authors": [
     {
-      "name": "dynamic_nithi_",
+      "name": "Nithin",
       "url": "https://www.instagram.com/dynamic_nithi_",
       "handle": "@dynamic_nithi_"
     },
     {
-      "name": "_.appu_kannadiga",
+      "name": "Manvanth Gowda,
       "url": "https://www.instagram.com/_.appu_kannadiga",
       "handle": "@_.appu_kannadiga"
     },
     {
-      "name": "mithun.gowda.b",
+      "name": "Mithun Gowda B",
       "url": "https://www.instagram.com/mithun.gowda.b",
       "handle": "@mithun.gowda.b"
     }
