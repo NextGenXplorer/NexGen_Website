@@ -68,6 +68,12 @@ export default {
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
       },
+      fontSize: {
+        'fluid-h1': 'clamp(2.5rem, 6vw, 4.5rem)',
+        'fluid-h2': 'clamp(2rem, 5vw, 3rem)',
+        'fluid-h3': 'clamp(1.5rem, 4vw, 2.25rem)',
+        'fluid-p': 'clamp(1rem, 2.5vw, 1.25rem)',
+      },
       keyframes: {
         'accordion-down': {
           from: {
