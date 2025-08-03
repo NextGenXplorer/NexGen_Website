@@ -50,7 +50,7 @@ export default function Navbar() {
   );
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-background/50 backdrop-blur-xl animate-slide-down">
+    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-background/50 backdrop-blur-md animate-slide-down">
       <div className="container flex h-20 items-center">
         <Link href="/" className="flex items-center gap-2 mr-auto">
           <Image
