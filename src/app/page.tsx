@@ -7,8 +7,8 @@ import Image from 'next/image';
 
 export default function Home() {
   return (
-    <div className="container mx-auto px-4 py-8 md:py-16 animate-in fade-in duration-500">
-      <section className="text-center mb-16 md:mb-24">
+    <div className="container mx-auto px-4 py-16 md:py-24 animate-in fade-in duration-500">
+      <section className="text-center mb-24 md:mb-32">
         <div className="relative z-10 flex flex-col items-center">
           <Image
             src="https://avatars.githubusercontent.com/u/223625668?s=400&u=3760cffbf5cec0e95bc14deac3725202dfa2eb8e&v=4"
@@ -19,10 +19,10 @@ export default function Home() {
             data-ai-hint="logo"
             priority
           />
-          <h1 className="text-5xl md:text-7xl font-black font-headline mb-4 bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400">
+          <h1 className="text-fluid-h1 font-black font-headline mb-4 bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400">
             NextGenXplorer
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
+          <p className="text-fluid-p text-muted-foreground max-w-3xl mx-auto mb-8">
             Charting the course of tomorrow's technology, today.
           </p>
           <div className="flex justify-center gap-4">
