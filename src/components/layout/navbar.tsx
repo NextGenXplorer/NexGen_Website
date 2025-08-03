@@ -13,7 +13,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { cn } from '@/lib/utils';
 import React from 'react';
 import { ThemeToggle } from '../theme-toggle';
@@ -25,7 +25,8 @@ const navLinks = [
 ];
 
 export default function Navbar() {
-  const isMobile = useIsMobile();
+  const breakpoint = useBreakpoint();
+  const isMobile = breakpoint === 'sm';
   const pathname = usePathname();
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -36,7 +37,7 @@ export default function Navbar() {
           <Link
             href={link.href}
             className={cn(
-              'text-lg text-foreground/80 hover:text-foreground',
+              'text-base md:text-lg text-foreground/80 hover:text-foreground',
               pathname === link.href && 'text-primary font-semibold'
             )}
             onClick={() => setIsOpen(false)}
@@ -49,7 +50,7 @@ export default function Navbar() {
   );
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 animate-slide-down">
+    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-background/50 backdrop-blur-xl animate-slide-down">
       <div className="container flex h-20 items-center">
         <Link href="/" className="flex items-center gap-2 mr-auto">
           <Image
