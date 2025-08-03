@@ -1,5 +1,4 @@
-
-import { Instagram, Github, Youtube, LucideIcon } from 'lucide-react';
+import { Instagram, Github, Youtube, LucideIcon, Send } from 'lucide-react';
 import content from '../data/content.json';
 import { notFound } from 'next/navigation';
 
@@ -28,6 +27,8 @@ const iconMap: { [key: string]: LucideIcon } = {
   YouTube: Youtube,
   Instagram: Instagram,
   GitHub: Github,
+  Telegram: Send,
+  'Telegram Group': Send,
 };
 
 const authorIconMap: { [key: string]: LucideIcon } = {
@@ -129,4 +130,4 @@ export async function getVideoById(id: string): Promise<YouTubeVideo> {
     notFound();
   }
   return video;
-}
+  }
