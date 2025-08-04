@@ -25,13 +25,13 @@ export default function Home() {
           <p className="text-fluid-p text-muted-foreground max-w-3xl mx-auto mb-8">
             Charting the course of tomorrow&apos;s technology, today.
           </p>
-          <div className="flex justify-center gap-4">
-            <Button asChild size="lg">
+          <div className="flex flex-col md:flex-row justify-center gap-4">
+            <Button asChild size="lg" className="w-full md:w-auto">
               <Link href="/youtube">
                 <Rocket className="mr-2 h-5 w-5" /> Begin Exploration
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline">
+            <Button asChild size="lg" variant="outline" className="w-full md:w-auto">
               <Link href="/socials">Join the Collective</Link>
             </Button>
           </div>
@@ -64,4 +64,5 @@ export default function Home() {
       </section>
     </div>
   );
-}
+          }
+      
