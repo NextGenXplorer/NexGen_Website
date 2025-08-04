@@ -22,6 +22,8 @@ const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/youtube', label: 'Archives' },
   { href: '/socials', label: 'Socials' },
+  { href: '/about', label: 'About' },
+  { href: '/contact', label: 'Contact' },
 ];
 
 export default function Navbar() {
