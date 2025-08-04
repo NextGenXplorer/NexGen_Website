@@ -1,1 +1,20 @@
-[]
+[
+  {
+      "youtubeUrl": "https://www.youtube.com/watch?v=0sK4uYNbm6w",
+      "relatedLinks": [
+        {
+          "label": "Link for video",
+          "url": "https://google.com"
+        }
+      ]
+    },
+    {
+      "youtubeUrl": "https://www.youtube.com/watch?v=Uj5RT6-xk7g",
+      "relatedLinks": [
+        {
+          "label": "Link",
+          "url": "https://example.com"
+        }
+      ]
+    }
+]
