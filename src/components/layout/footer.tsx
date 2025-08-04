@@ -38,6 +38,10 @@ export default function Footer() {
               </a>
             </Button>
           ))}
+          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+          <Link href="/privacy-policy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
+          <Link href="/terms-and-conditions" className="hover:text-foreground transition-colors">Terms & Conditions</Link>
+        </div>
         </div>
       </div>
     </footer>
