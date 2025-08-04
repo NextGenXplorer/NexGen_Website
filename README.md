@@ -1,7 +1,8 @@
 # NextGenXplorer
 
 > Charting the course of tomorrow's technology, today.
-> [![Netlify Status](https://api.netlify.com/api/v1/badges/ea28765b-ed2e-446e-9d83-898a1aaf5b90/deploy-status)](https://app.netlify.com/projects/nextgenxplorer/deploys)
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/ea28765b-ed2e-446e-9d83-898a1aaf5b90/deploy-status)](https://app.netlify.com/projects/nextgenxplorer/deploys) [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Next.js](https://img.shields.io/badge/Made%20with-Next.js-black?logo=next.js)](https://nextjs.org) [![Tailwind CSS](https://img.shields.io/badge/Styled%20with-Tailwind%20CSS-38B2AC?logo=tailwind-css)](https://tailwindcss.com)
 
 Welcome to the official repository for **NextGenXplorer**, a digital think tank and media hub dedicated to exploring the future of technology and its impact on our world.
 
@@ -12,7 +13,7 @@ Our mission is to decode the future. We dissect and debate the technological for
 
 ## Key Features
 
-- **Dynamic Content:** All application content, including video links and social media handles, is managed through a centralized `src/data/content.json` file, making updates simple and straightforward.
+- **Dynamic Content:** All application content is managed through centralized JSON files (`src/data/content.json` and `src/data/videos.json`), making updates simple and straightforward.
 - **Automatic Video Details:** The app automatically fetches video titles, descriptions, and thumbnails from YouTube, so you only need to provide the video URL.
 - **Responsive Design:** A modern, mobile-first design that ensures a seamless experience across all devices.
 - **Themed UI:** Built with a sleek, customizable dark/light mode toggle.
@@ -50,7 +51,7 @@ To run the app locally, clone the repository and follow these steps:
 
 ## Content Management
 
-All text and links are stored in `src/data/content.json`. To add a new video, simply add its `youtubeUrl` to the `videos` array. The app will automatically fetch the title, description, and thumbnail.
+Most text and links are stored in `src/data/content.json`. Video information is stored in `src/data/videos.json`. To add a new video, simply add its `youtubeUrl` to the `videos.json` file. The app will automatically fetch the title, description, and thumbnail.
 
 The `content.json` file has the following structure:
 
@@ -61,17 +62,6 @@ The `content.json` file has the following structure:
     "goal": "...",
     "about": "..."
   },
-  "videos": [
-    {
-      "youtubeUrl": "https://www.youtube.com/watch?v=VIDEO_ID",
-      "relatedLinks": [
-        {
-          "label": "Link Label",
-          "url": "https://example.com"
-        }
-      ]
-    }
-  ],
   "socials": [
     {
       "name": "YouTube",
@@ -87,6 +77,22 @@ The `content.json` file has the following structure:
     }
   ]
 }
+```
+
+The `videos.json` file has the following structure:
+
+```json
+[
+  {
+    "youtubeUrl": "https://www.youtube.com/watch?v=VIDEO_ID",
+    "relatedLinks": [
+      {
+        "label": "Link Label",
+        "url": "https://example.com"
+      }
+    ]
+  }
+]
 ```
 
 ---

@@ -23,7 +23,7 @@ export default function Home() {
             NextGenXplorer
           </h1>
           <p className="text-fluid-p text-muted-foreground max-w-3xl mx-auto mb-8">
-            Charting the course of tomorrow's technology, today.
+            Charting the course of tomorrow&apos;s technology, today.
           </p>
           <div className="flex justify-center gap-4">
             <Button asChild size="lg">

@@ -24,26 +24,29 @@ export default function Footer() {
             &copy; {year} All rights reserved.
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          {socials.map((social) => (
-            <Button
-              key={social.name}
-              variant="ghost"
-              size="icon"
-              asChild
-            >
-              <a href={social.url} target="_blank" rel="noopener noreferrer">
-                <social.Icon className="h-5 w-5 text-muted-foreground hover:text-foreground transition-colors" />
-                <span className="sr-only">{social.name}</span>
-              </a>
-            </Button>
-          ))}
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-          <Link href="/privacy-policy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
-          <Link href="/terms-and-conditions" className="hover:text-foreground transition-colors">Terms & Conditions</Link>
-        </div>
+        <div className="flex flex-col items-center gap-4 md:flex-row">
+          <div className="flex items-center gap-2">
+            {socials.map((social) => (
+              <Button
+                key={social.name}
+                variant="ghost"
+                size="icon"
+                asChild
+              >
+                <a href={social.url} target="_blank" rel="noopener noreferrer">
+                  <social.Icon className="h-5 w-5 text-muted-foreground hover:text-foreground transition-colors" />
+                  <span className="sr-only">{social.name}</span>
+                </a>
+              </Button>
+            ))}
+          </div>
+          <div className="flex flex-col items-center gap-2 text-sm text-muted-foreground sm:flex-row sm:gap-4">
+            <Link href="/privacy-policy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
+            <Link href="/terms-and-conditions" className="hover:text-foreground transition-colors">Terms & Conditions</Link>
+          </div>
         </div>
       </div>
     </footer>
   );
-}
+          }
+                          

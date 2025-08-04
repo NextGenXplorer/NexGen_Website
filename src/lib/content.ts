@@ -1,5 +1,6 @@
 import { Instagram, Github, Youtube, LucideIcon, Send } from 'lucide-react';
 import content from '../data/content.json';
+import videos from '../data/videos.json';
 import { notFound } from 'next/navigation';
 
 export interface VideoConfig {
@@ -115,13 +116,13 @@ export const authors: SocialLink[] = content.authors.map((author) => ({
 
 
 export async function getVideos(): Promise<YouTubeVideo[]> {
-  if (!content.videos || content.videos.length === 0) {
+  if (!videos || videos.length === 0) {
     return [];
   }
-  const videoPromises = content.videos.map(fetchYouTubeDetails);
-  const videos = await Promise.all(videoPromises);
+  const videoPromises = videos.map(fetchYouTubeDetails);
+  const resolvedVideos = await Promise.all(videoPromises);
   // Filter out any null results from failed fetches
-  return videos.filter((v): v is YouTubeVideo => v !== null);
+  return resolvedVideos.filter((v): v is YouTubeVideo => v !== null);
 }
 
 export async function getVideoById(id: string): Promise<YouTubeVideo> {
@@ -131,4 +132,5 @@ export async function getVideoById(id: string): Promise<YouTubeVideo> {
     notFound();
   }
   return video;
-  }
+          }
+          
