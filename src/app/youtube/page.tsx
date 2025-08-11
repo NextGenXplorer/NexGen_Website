@@ -5,13 +5,14 @@ import { Youtube } from 'lucide-react';
 import Link from 'next/link';
 import { getVideos } from '@/lib/content';
 
-export const revalidate = 3600; // Revalidate every hour
-
 export default async function YouTubePage() {
   const videos = await getVideos();
 
   const videoSummaries = videos.map((video) => {
-    return { id: video.id, summary: video.description.slice(0, 150) + '...' };
+    const summary = video.description
+      ? video.description.slice(0, 150) + '...'
+      : 'No description available.';
+    return { id: video.id, summary };
   });
 
   const summariesMap = new Map(videoSummaries.map((s) => [s.id, s.summary]));
