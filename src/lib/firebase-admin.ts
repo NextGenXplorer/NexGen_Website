@@ -1,29 +1,22 @@
-import * as admin from "firebase-admin";
+import * as admin from 'firebase-admin';
 
-if (!process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
-  throw new Error("FIREBASE_SERVICE_ACCOUNT_KEY is not set");
-}
-
-let serviceAccount;
-try {
-  // Decode Base64 → UTF-8 string → JSON
-  const jsonString = Buffer.from(
-    process.env.FIREBASE_SERVICE_ACCOUNT_KEY,
-    "base64"
-  ).toString("utf8");
-
-  serviceAccount = JSON.parse(jsonString);
-} catch (e) {
-  console.error("Failed to decode FIREBASE_SERVICE_ACCOUNT_KEY", e);
-  throw e;
+// Make sure all required vars are set
+if (!process.env.FIREBASE_PROJECT_ID ||
+    !process.env.FIREBASE_PRIVATE_KEY ||
+    !process.env.FIREBASE_CLIENT_EMAIL) {
+  throw new Error('Missing Firebase Admin environment variables.');
 }
 
 if (!admin.apps.length) {
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
+    credential: admin.credential.cert({
+      project_id: process.env.FIREBASE_PROJECT_ID,
+      private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+      client_email: process.env.FIREBASE_CLIENT_EMAIL,
+    }),
   });
 }
 
 export const adminAuth = admin.auth();
 export const adminDb = admin.firestore();
-    
+      
