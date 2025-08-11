@@ -61,7 +61,10 @@ To run this project, you will need to add the following environment variables to
 -   `JWT_SECRET`: A long, random, and secret string used for signing authentication tokens. You can generate one using `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`.
 
 ### Firebase (for Content)
-The following variables are needed for the application to interact with Firebase services like Firestore for content management.
+The following variables are needed for the application to interact with Firebase services.
+
+#### Client-Side (Public)
+These are exposed to the browser and are safe to be public.
 -   `NEXT_PUBLIC_FIREBASE_API_KEY`: Your Firebase API key.
 -   `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`: Your Firebase auth domain.
 -   `NEXT_PUBLIC_FIREBASE_PROJECT_ID`: Your Firebase project ID.
@@ -69,6 +72,12 @@ The following variables are needed for the application to interact with Firebase
 -   `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`: Your Firebase messaging sender ID.
 -   `NEXT_PUBLIC_FIREBASE_APP_ID`: Your Firebase app ID.
 -   `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID`: Your Firebase measurement ID.
+
+#### Server-Side (Admin)
+These are used on the server and must be kept secret. They grant admin access to your Firebase project.
+-   `FIREBASE_PROJECT_ID`: Your Firebase project ID.
+-   `FIREBASE_PRIVATE_KEY`: Your Firebase private key (the full key, including the header and footer).
+-   `FIREBASE_CLIENT_EMAIL`: Your Firebase client email.
 
 ## Admin Authentication
 

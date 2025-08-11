@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { collection, getDocs, addDoc, deleteDoc, doc, query, where } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase'; // Using client-side db for public GET
+import { adminDb } from '@/lib/firebase-admin'; // Using admin SDK for protected routes
 import jwt from 'jsonwebtoken';
 import { cookies } from 'next/headers';
 
@@ -34,6 +35,7 @@ function verifyAdmin(): boolean {
 // GET all videos (public)
 export async function GET() {
     try {
+        // Using client-side db for public, read-only access
         const videosCollection = collection(db, 'videos');
         const videoSnapshot = await getDocs(videosCollection);
         const videos = videoSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -57,11 +59,10 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ message: 'YouTube URL is required.' }, { status: 400 });
         }
 
-        // Optional: Check if video with this URL already exists
-        const videosCollection = collection(db, 'videos');
-        const q = query(videosCollection, where("youtubeUrl", "==", youtubeUrl));
-        const querySnapshot = await getDocs(q);
-        if (!querySnapshot.empty) {
+        // Using adminDb to bypass security rules for admin actions
+        const videosCollection = adminDb.collection('videos');
+        const q = await videosCollection.where("youtubeUrl", "==", youtubeUrl).get();
+        if (!q.empty) {
             return NextResponse.json({ message: 'Video with this URL already exists.' }, { status: 409 });
         }
 
@@ -71,12 +72,12 @@ export async function POST(request: NextRequest) {
             createdAt: new Date(),
         };
 
-        const docRef = await addDoc(collection(db, 'videos'), newVideo);
+        const docRef = await videosCollection.add(newVideo);
 
         return NextResponse.json({ message: 'Video added successfully.', id: docRef.id }, { status: 201 });
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error adding video:', error);
-        return NextResponse.json({ message: 'Failed to add video.' }, { status: 500 });
+        return NextResponse.json({ message: 'Failed to add video.', error: error.message }, { status: 500 });
     }
 }
 
@@ -94,11 +95,12 @@ export async function DELETE(request: NextRequest) {
             return NextResponse.json({ message: 'Video ID is required.' }, { status: 400 });
         }
 
-        await deleteDoc(doc(db, 'videos', id));
+        // Using adminDb to bypass security rules for admin actions
+        await adminDb.collection('videos').doc(id).delete();
 
         return NextResponse.json({ message: 'Video deleted successfully.' });
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error deleting video:', error);
-        return NextResponse.json({ message: 'Failed to delete video.' }, { status: 500 });
+        return NextResponse.json({ message: 'Failed to delete video.', error: error.message }, { status: 500 });
     }
 }
