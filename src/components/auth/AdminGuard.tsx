@@ -2,10 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
-import { isAdmin } from '@/lib/auth';
-import { Spinner } from '@/components/ui/spinner'; // Assuming a spinner component exists
+import { Spinner } from '@/components/ui/spinner';
 
 export default function AdminGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -13,27 +10,28 @@ export default function AdminGuard({ children }: { children: React.ReactNode }) 
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        // User is signed in, now check if they are an admin.
-        const userIsAdmin = await isAdmin(user.uid);
-        if (userIsAdmin) {
-          setIsAuthorized(true);
+    const checkAuthStatus = async () => {
+      try {
+        const response = await fetch('/api/auth/status');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.isAuthenticated) {
+            setIsAuthorized(true);
+          } else {
+            router.push('/login');
+          }
         } else {
-          // User is not an admin, redirect them.
-          console.log("User is not an admin. Redirecting to login.");
           router.push('/login');
         }
-      } else {
-        // User is not signed in, redirect them.
-        console.log("User is not logged in. Redirecting to login.");
+      } catch (error) {
+        console.error('Failed to check auth status:', error);
         router.push('/login');
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
-    });
+    };
 
-    // Cleanup subscription on unmount
-    return () => unsubscribe();
+    checkAuthStatus();
   }, [router]);
 
   if (isLoading) {
@@ -48,7 +46,7 @@ export default function AdminGuard({ children }: { children: React.ReactNode }) 
     return <>{children}</>;
   }
 
-  // This part will likely not be reached due to the redirects, but it's good practice.
+  // User is not authorized, redirect has already been triggered.
+  // Return null to avoid rendering children during the redirect.
   return null;
-    }
-    
+}

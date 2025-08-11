@@ -1,34 +1,35 @@
-import { NextResponse } from 'next/server';
-import { getFirebaseAdmin } from '@/lib/firebase-admin';
+import { NextRequest, NextResponse } from 'next/server';
 import { collection, getDocs, addDoc, deleteDoc, doc, query, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase'; // Using client-side db for public GET
+import jwt from 'jsonwebtoken';
+import { cookies } from 'next/headers';
 
-// Helper function to verify the user's token and admin status
-async function verifyAdmin(request: Request): Promise<{ authorized: boolean; error?: string; status?: number }> {
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return { authorized: false, error: 'Authorization header missing or invalid.', status: 401 };
-    }
+const JWT_SECRET = process.env.JWT_SECRET;
 
-    const idToken = authHeader.split('Bearer ')[1];
-    try {
-        const admin = getFirebaseAdmin();
-        const decodedToken = await admin.auth().verifyIdToken(idToken);
-        const uid = decodedToken.uid;
-
-        // Check if the user is an admin in Firestore
-        const userDoc = await admin.firestore().collection('users').doc(uid).get();
-        if (!userDoc.exists || !userDoc.data()?.isAdmin) {
-            return { authorized: false, error: 'User is not an administrator.', status: 403 };
-        }
-
-        return { authorized: true };
-    } catch (error) {
-        console.error('Error verifying token:', error);
-        return { authorized: false, error: 'Invalid or expired token.', status: 401 };
-    }
+if (!JWT_SECRET) {
+  throw new Error('Missing JWT_SECRET from environment variables.');
 }
 
+// Helper function to verify the admin's JWT session
+function verifyAdmin(): boolean {
+  const cookieStore = cookies();
+  const token = cookieStore.get('admin_session')?.value;
+
+  if (!token) {
+    return false;
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    if (typeof decoded === 'object' && decoded.isAdmin === true) {
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.log("Admin verification failed:", error);
+    return false;
+  }
+}
 
 // GET all videos (public)
 export async function GET() {
@@ -44,10 +45,9 @@ export async function GET() {
 }
 
 // POST a new video (admin only)
-export async function POST(request: Request) {
-    const adminCheck = await verifyAdmin(request);
-    if (!adminCheck.authorized) {
-        return NextResponse.json({ message: adminCheck.error }, { status: adminCheck.status });
+export async function POST(request: NextRequest) {
+    if (!verifyAdmin()) {
+        return new NextResponse(JSON.stringify({ message: 'Unauthorized' }), { status: 401 });
     }
     
     try {
@@ -82,10 +82,9 @@ export async function POST(request: Request) {
 
 
 // DELETE a video (admin only)
-export async function DELETE(request: Request) {
-    const adminCheck = await verifyAdmin(request);
-    if (!adminCheck.authorized) {
-        return NextResponse.json({ message: adminCheck.error }, { status: adminCheck.status });
+export async function DELETE(request: NextRequest) {
+    if (!verifyAdmin()) {
+        return new NextResponse(JSON.stringify({ message: 'Unauthorized' }), { status: 401 });
     }
 
     try {

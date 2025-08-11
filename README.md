@@ -41,7 +41,7 @@ To run the app locally, clone the repository and follow these steps:
     ```
 
 2.  **Set Up Environment Variables:**
-    Create a `.env` file in the root of the project and add the necessary environment variables. You can use the `.env.example` file as a template.
+    Create a `.env` file in the root of the project and add the necessary environment variables. See the "Environment Variables" section below for details.
 
 3.  **Run the Development Server:**
     Start the development server.
@@ -54,11 +54,14 @@ To run the app locally, clone the repository and follow these steps:
 
 ## Environment Variables
 
-To run this project, you will need to add the following environment variables to a `.env` file in the root of your project. You can use the `.env.example` file as a template.
+To run this project, you will need to add the following environment variables to a `.env` file. You can use the `.env.example` file as a template.
 
--   `FIREBASE_PROJECT_ID`: Your Firebase project ID.
--   `FIREBASE_PRIVATE_KEY`: Your Firebase private key.
--   `FIREBASE_CLIENT_EMAIL`: Your Firebase client email.
+### Admin Authentication
+-   `ADMIN_PASSWORD`: A secure password for accessing the admin panel.
+-   `JWT_SECRET`: A long, random, and secret string used for signing authentication tokens. You can generate one using `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`.
+
+### Firebase (for Content)
+The following variables are needed for the application to interact with Firebase services like Firestore for content management.
 -   `NEXT_PUBLIC_FIREBASE_API_KEY`: Your Firebase API key.
 -   `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`: Your Firebase auth domain.
 -   `NEXT_PUBLIC_FIREBASE_PROJECT_ID`: Your Firebase project ID.
@@ -66,6 +69,10 @@ To run this project, you will need to add the following environment variables to
 -   `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`: Your Firebase messaging sender ID.
 -   `NEXT_PUBLIC_FIREBASE_APP_ID`: Your Firebase app ID.
 -   `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID`: Your Firebase measurement ID.
+
+## Admin Authentication
+
+The admin panel is protected by a password-based authentication system that is separate from Firebase Authentication. To log in, navigate to the `/login` page and enter the password defined in your `ADMIN_PASSWORD` environment variable.
 
 ## Deployment
 
