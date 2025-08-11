@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { adminAuth, adminDb } from '@/lib/firebase-admin';
+import { getFirebaseAdmin } from '@/lib/firebase-admin';
 import { collection, getDocs, addDoc, deleteDoc, doc, query, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase'; // Using client-side db for public GET
 
@@ -12,11 +12,12 @@ async function verifyAdmin(request: Request): Promise<{ authorized: boolean; err
 
     const idToken = authHeader.split('Bearer ')[1];
     try {
-        const decodedToken = await adminAuth.verifyIdToken(idToken);
+        const admin = getFirebaseAdmin();
+        const decodedToken = await admin.auth().verifyIdToken(idToken);
         const uid = decodedToken.uid;
 
         // Check if the user is an admin in Firestore
-        const userDoc = await adminDb.collection('users').doc(uid).get();
+        const userDoc = await admin.firestore().collection('users').doc(uid).get();
         if (!userDoc.exists || !userDoc.data()?.isAdmin) {
             return { authorized: false, error: 'User is not an administrator.', status: 403 };
         }
