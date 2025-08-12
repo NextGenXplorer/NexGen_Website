@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { onAuthStateChanged, signOut, User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
+import { formatYoutubeUrl } from '@/lib/utils';
 import AdminGuard from '@/components/auth/AdminGuard';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -43,10 +44,13 @@ function AdminPanel() {
     fetchVideos();
   }, []);
 
-  const getAuthHeader = async () => {
-    if (!currentUser) return {};
-    const token = await currentUser.getIdToken();
-    return { Authorization: `Bearer ${token}` };
+  const getAuthHeader = async (): Promise<HeadersInit> => {
+    const headers: HeadersInit = {};
+    if (currentUser) {
+      const token = await currentUser.getIdToken();
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    return headers;
   };
 
   const fetchVideos = async () => {
@@ -101,8 +105,12 @@ function AdminPanel() {
       setRelatedLinks([{ label: '', url: '' }]);
       setIsPublic(true);
       fetchVideos();
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unexpected error occurred.');
+      }
     }
   };
 
@@ -120,8 +128,12 @@ function AdminPanel() {
         throw new Error(message || 'Failed to delete video');
       }
       fetchVideos();
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unexpected error occurred.');
+      }
     }
   };
 
@@ -162,7 +174,7 @@ function AdminPanel() {
                 type="url"
                 placeholder="https://www.youtube.com/watch?v=..."
                 value={youtubeUrl}
-                onChange={(e) => setYoutubeUrl(e.target.value)}
+                onChange={(e) => setYoutubeUrl(formatYoutubeUrl(e.target.value))}
                 required
               />
             </div>

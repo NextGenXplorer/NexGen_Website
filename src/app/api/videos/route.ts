@@ -103,9 +103,10 @@ export async function POST(request: NextRequest) {
     revalidatePath('/');
 
     return NextResponse.json({ message: 'Video added successfully.', id: docRef.id }, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error adding video:', error);
-    return NextResponse.json({ message: 'Failed to add video.', error: error.message }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred.';
+    return NextResponse.json({ message: 'Failed to add video.', error: errorMessage }, { status: 500 });
   }
 }
 
@@ -127,9 +128,10 @@ export async function DELETE(request: NextRequest) {
     revalidatePath('/');
 
     return NextResponse.json({ message: 'Video deleted successfully.' });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error deleting video:', error);
-    return NextResponse.json({ message: 'Failed to delete video.', error: error.message }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred.';
+    return NextResponse.json({ message: 'Failed to delete video.', error: errorMessage }, { status: 500 });
   }
   }
       
