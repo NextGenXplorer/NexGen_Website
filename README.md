@@ -134,11 +134,5 @@ To add a new video, you must add a new document to the `videos` collection. Each
 
 The app will automatically fetch the video's title, description, and thumbnail from YouTube using the provided `youtubeUrl`.
 
-### Site Statistics (Firestore)
-The application tracks the total number of unique site visitors. This data is stored in a Firestore document at `stats/visits`. This document contains a single field:
-
--   `count` (number): The total number of visitors.
-
-This count is automatically incremented once per user session and is displayed in the admin panel.
 
 ---
