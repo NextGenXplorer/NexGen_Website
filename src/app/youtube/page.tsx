@@ -5,13 +5,24 @@ import { Youtube } from 'lucide-react';
 import Link from 'next/link';
 import { getVideos } from '@/lib/content';
 
-export const revalidate = 3600; // Revalidate every hour
-
+/**
+ * Server component that renders the YouTube "Archives" page.
+ *
+ * Fetches videos via `getVideos()`, builds short summaries (150 chars or a fallback
+ * message) and renders a responsive grid of `VideoCard` components when videos
+ * exist. When no videos are available, shows a message and, if present, a large
+ * "Subscribe on YouTube" call-to-action linking to the configured YouTube social URL.
+ *
+ * @returns A server-rendered React element for the YouTube archives page.
+ */
 export default async function YouTubePage() {
   const videos = await getVideos();
 
   const videoSummaries = videos.map((video) => {
-    return { id: video.id, summary: video.description.slice(0, 150) + '...' };
+    const summary = video.description
+      ? video.description.slice(0, 150) + '...'
+      : 'No description available.';
+    return { id: video.id, summary };
   });
 
   const summariesMap = new Map(videoSummaries.map((s) => [s.id, s.summary]));
