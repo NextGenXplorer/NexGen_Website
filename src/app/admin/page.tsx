@@ -11,11 +11,13 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Trash2, LogOut } from 'lucide-react';
 import { Spinner } from '@/components/ui/spinner';
+import { Switch } from '@/components/ui/switch';
 
 interface Video {
   id: string;
   youtubeUrl: string;
   relatedLinks: { label: string; url: string }[];
+  isPublic?: boolean;
 }
 
 function AdminPanel() {
@@ -24,11 +26,12 @@ function AdminPanel() {
   const [relatedLinks, setRelatedLinks] = useState<{ label: string; url: string }[]>([
     { label: '', url: '' },
   ]);
+  const [isPublic, setIsPublic] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const router = useRouter();
-  
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
@@ -43,13 +46,14 @@ function AdminPanel() {
   const getAuthHeader = async () => {
     if (!currentUser) return {};
     const token = await currentUser.getIdToken();
-    return { 'Authorization': `Bearer ${token}` };
-  }
+    return { Authorization: `Bearer ${token}` };
+  };
 
   const fetchVideos = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/videos');
+      const headers = await getAuthHeader(); // ✅ Include admin token
+      const response = await fetch('/api/videos', { headers });
       if (!response.ok) throw new Error('Failed to fetch videos');
       const data = await response.json();
       setVideos(data);
@@ -61,7 +65,10 @@ function AdminPanel() {
   };
 
   const handleAddLink = () => setRelatedLinks([...relatedLinks, { label: '', url: '' }]);
-  const handleRemoveLink = (index: number) => setRelatedLinks(relatedLinks.filter((_, i) => i !== index));
+
+  const handleRemoveLink = (index: number) =>
+    setRelatedLinks(relatedLinks.filter((_, i) => i !== index));
+
   const handleLinkChange = (index: number, field: 'label' | 'url', value: string) => {
     const newLinks = [...relatedLinks];
     newLinks[index][field] = value;
@@ -75,13 +82,16 @@ function AdminPanel() {
       setError('YouTube URL is required.');
       return;
     }
-
     try {
       const headers = await getAuthHeader();
       const response = await fetch('/api/videos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...headers },
-        body: JSON.stringify({ youtubeUrl, relatedLinks: relatedLinks.filter(l => l.label && l.url) }),
+        body: JSON.stringify({
+          youtubeUrl,
+          relatedLinks: relatedLinks.filter((l) => l.label && l.url),
+          isPublic,
+        }),
       });
       if (!response.ok) {
         const { message } = await response.json();
@@ -89,6 +99,7 @@ function AdminPanel() {
       }
       setYoutubeUrl('');
       setRelatedLinks([{ label: '', url: '' }]);
+      setIsPublic(true);
       fetchVideos();
     } catch (error: any) {
       setError(error.message);
@@ -119,68 +130,148 @@ function AdminPanel() {
       await signOut(auth);
       router.push('/login');
     } catch (error) {
-      console.error("Logout failed:", error);
-      setError("Failed to log out. Please try again.");
+      console.error('Logout failed:', error);
+      setError('Failed to log out. Please try again.');
     }
   };
 
   return (
     <div className="container mx-auto p-4 relative">
-        <Button onClick={handleLogout} variant="outline" className="absolute top-4 right-4">
-            <LogOut className="h-4 w-4 mr-2" />
-            Logout
-        </Button>
+      <Button
+        onClick={handleLogout}
+        variant="outline"
+        className="absolute top-4 right-4"
+      >
+        <LogOut className="h-4 w-4 mr-2" />
+        Logout
+      </Button>
+
       <h1 className="text-3xl font-bold mb-6 text-center">Admin Panel</h1>
-      
+
+      {/* Add New Video Form */}
       <Card className="mb-8">
-        <CardHeader><CardTitle>Add New Video</CardTitle></CardHeader>
+        <CardHeader>
+          <CardTitle>Add New Video</CardTitle>
+        </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="youtubeUrl">YouTube Video URL</Label>
-              <Input id="youtubeUrl" type="url" placeholder="https://www.youtube.com/watch?v=..." value={youtubeUrl} onChange={(e) => setYoutubeUrl(e.target.value)} required />
+              <Input
+                id="youtubeUrl"
+                type="url"
+                placeholder="https://www.youtube.com/watch?v=..."
+                value={youtubeUrl}
+                onChange={(e) => setYoutubeUrl(e.target.value)}
+                required
+              />
             </div>
+
             <div className="space-y-4">
               <Label>Related Links</Label>
               {relatedLinks.map((link, index) => (
-                <div key={index} className="flex items-center gap-4 p-2 border rounded-lg">
-                  <Input type="text" placeholder="Label" value={link.label} onChange={(e) => handleLinkChange(index, 'label', e.target.value)} className="flex-1" />
-                  <Input type="url" placeholder="https://example.com" value={link.url} onChange={(e) => handleLinkChange(index, 'url', e.target.value)} className="flex-1" />
-                  <Button type="button" variant="destructive" size="icon" onClick={() => handleRemoveLink(index)}><Trash2 className="h-4 w-4" /></Button>
+                <div
+                  key={index}
+                  className="flex items-center gap-4 p-2 border rounded-lg"
+                >
+                  <Input
+                    type="text"
+                    placeholder="Label"
+                    value={link.label}
+                    onChange={(e) =>
+                      handleLinkChange(index, 'label', e.target.value)
+                    }
+                    className="flex-1"
+                  />
+                  <Input
+                    type="url"
+                    placeholder="https://example.com"
+                    value={link.url}
+                    onChange={(e) =>
+                      handleLinkChange(index, 'url', e.target.value)
+                    }
+                    className="flex-1"
+                  />
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="icon"
+                    onClick={() => handleRemoveLink(index)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
                 </div>
               ))}
-              <Button type="button" variant="outline" onClick={handleAddLink}>Add Another Link</Button>
+              <Button type="button" variant="outline" onClick={handleAddLink}>
+                Add Another Link
+              </Button>
             </div>
+
+            {/* Public/Private toggle */}
+            <div className="flex items-center gap-2">
+              <Switch
+                checked={isPublic}
+                onCheckedChange={setIsPublic}
+              />
+              <Label>{isPublic ? 'Public' : 'Private'}</Label>
+            </div>
+
             {error && <p className="text-red-500">{error}</p>}
             <Button type="submit">Add Video</Button>
           </form>
         </CardContent>
       </Card>
-      
+
+      {/* Manage Videos */}
       <Card>
-        <CardHeader><CardTitle>Manage Videos</CardTitle></CardHeader>
+        <CardHeader>
+          <CardTitle>Manage Videos</CardTitle>
+        </CardHeader>
         <CardContent>
-          {isLoading ? <div className="flex justify-center"><Spinner /></div> : videos.length > 0 ? (
+          {isLoading ? (
+            <div className="flex justify-center">
+              <Spinner />
+            </div>
+          ) : videos.length > 0 ? (
             <ul className="space-y-4">
               {videos.map((video) => (
-                <li key={video.id} className="flex items-center justify-between p-4 border rounded-lg">
-                  <a href={video.youtubeUrl} target="_blank" rel="noopener noreferrer" className="hover:underline truncate">{video.youtubeUrl}</a>
-                  <Button variant="destructive" onClick={() => handleDelete(video.id)}><Trash2 className="h-4 w-4 mr-2" />Delete</Button>
+                <li
+                  key={video.id}
+                  className="flex items-center justify-between p-4 border rounded-lg"
+                >
+                  <a
+                    href={video.youtubeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline truncate"
+                  >
+                    {video.youtubeUrl}
+                  </a>
+                  <Button
+                    variant="destructive"
+                    onClick={() => handleDelete(video.id)}
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Delete
+                  </Button>
                 </li>
               ))}
             </ul>
-          ) : <p>No videos found. Add one above to get started.</p>}
+          ) : (
+            <p>No videos found. Add one above to get started.</p>
+          )}
         </CardContent>
       </Card>
     </div>
   );
 }
 
-// Wrap the admin panel with the guard
+// Wrap with admin guard
 export default function AdminPage() {
-    return (
-        <AdminGuard>
-            <AdminPanel />
-        </AdminGuard>
-    );
-  }
+  return (
+    <AdminGuard>
+      <AdminPanel />
+    </AdminGuard>
+  );
+    }
+    
