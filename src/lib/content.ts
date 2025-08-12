@@ -3,15 +3,18 @@ import content from '../data/content.json';
 import { notFound } from 'next/navigation';
 import { adminDb } from './firebase-admin';
 
+export interface VideoConfig {
+  youtubeUrl: string;
+  relatedLinks: { label: string; url: string }[];
+}
+
 export interface YouTubeVideo {
   id: string;
   youtubeId: string;
   title: string;
   description: string;
   thumbnailUrl: string;
-  youtubeUrl: string;
   relatedLinks: { label: string; url: string }[];
-  createdAt: { seconds: number, nanoseconds: number };
 }
 
 export interface SocialLink {
@@ -37,53 +40,67 @@ const authorIconMap: { [key: string]: LucideIcon } = {
 };
 
 function getYouTubeId(url: string): string | null {
-    const regExp = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|watch\?v=)|(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|watch\?v%3D))([^#&?]*).*/;
-    const match = url.match(regExp);
-    return match && match[1].length === 11 ? match[1] : null;
+  const regExp =
+    /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|watch\?v=)|(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|watch\?v%3D))([^#&?]*).*/;
+  const match = url.match(regExp);
+  return match && match[1].length === 11 ? match[1] : null;
 }
 
-async function fetchAndEnrichVideo(doc: FirebaseFirestore.QueryDocumentSnapshot): Promise<YouTubeVideo> {
-    const videoData = doc.data() as Partial<YouTubeVideo>;
-    const docId = doc.id;
+async function fetchYouTubeDetails(video: VideoConfig): Promise<YouTubeVideo | null> {
+  const youtubeId = getYouTubeId(video.youtubeUrl);
 
-    // If title exists, data is already enriched. Return it as is.
-    if (videoData.title && videoData.thumbnailUrl) {
-        return { id: docId, ...videoData } as YouTubeVideo;
+  if (!youtubeId) {
+    console.error('Invalid YouTube URL, missing video ID:', video.youtubeUrl);
+    return {
+      ...video,
+      id: 'invalid-video-id-' + Math.random(),
+      youtubeId: 'invalid-video-id',
+      title: 'Invalid YouTube URL',
+      description:
+        'The provided YouTube URL could not be parsed. Please check the format.',
+      thumbnailUrl: `https://placehold.co/1280x720.png`,
+    };
+  }
+
+  try {
+    const response = await fetch(
+      `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${youtubeId}&format=json`
+    );
+
+    if (!response.ok) {
+      console.error('Failed to fetch video data for', video.youtubeUrl);
+      return {
+        ...video,
+        id: youtubeId,
+        youtubeId,
+        title: 'Video Title Unavailable',
+        description:
+          'Could not load video details. The video may be private or have embedding disabled.',
+        thumbnailUrl: `https://i.ytimg.com/vi/${youtubeId}/maxresdefault.jpg`,
+      };
     }
 
-    // Data is incomplete, fetch from YouTube and update Firestore
-    const youtubeId = getYouTubeId(videoData.youtubeUrl || '');
-    if (!youtubeId) {
-        // Return what we have if the URL is invalid
-        return { id: docId, ...videoData, title: 'Invalid URL', description: '', thumbnailUrl: '' } as YouTubeVideo;
-    }
+    const data = await response.json();
 
-    try {
-        console.log(`Enriching video data for: ${youtubeId}`);
-        const oembedResponse = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${youtubeId}&format=json`);
-        if (!oembedResponse.ok) {
-            throw new Error('Failed to fetch video details from YouTube oEmbed API.');
-        }
-        const oembedData = await oembedResponse.json();
-
-        const enrichedData = {
-            ...videoData,
-            youtubeId,
-            title: oembedData.title,
-            description: oembedData.title,
-            thumbnailUrl: oembedData.thumbnail_url.replace('hqdefault.jpg', 'maxresdefault.jpg'),
-        };
-
-        // Update the document in Firestore with the enriched data
-        await adminDb.collection('videos').doc(docId).update(enrichedData);
-
-        return { id: docId, ...enrichedData } as YouTubeVideo;
-
-    } catch (error) {
-        console.error(`Failed to enrich video ${docId}:`, error);
-        // Return the original data on failure to avoid crashing the page
-        return { id: docId, ...videoData, title: 'Details Unavailable', description: '', thumbnailUrl: '' } as YouTubeVideo;
-    }
+    return {
+      ...video,
+      id: youtubeId,
+      youtubeId,
+      title: data.title,
+      description: data.title, // oEmbed doesn't provide full description
+      thumbnailUrl: data.thumbnail_url.replace('hqdefault.jpg', 'maxresdefault.jpg'),
+    };
+  } catch (error) {
+    console.error('Error fetching video details for', video.youtubeUrl, error);
+    return {
+      ...video,
+      id: youtubeId,
+      youtubeId,
+      title: 'Video Title Unavailable',
+      description: 'An error occurred while trying to load video details.',
+      thumbnailUrl: `https://i.ytimg.com/vi/${youtubeId}/maxresdefault.jpg`,
+    };
+  }
 }
 
 export const channelInfo = content.channelInfo;
@@ -98,42 +115,32 @@ export const authors: SocialLink[] = content.authors.map((author) => ({
   Icon: authorIconMap[author.name] || Instagram,
 }));
 
-
 export async function getVideos(): Promise<YouTubeVideo[]> {
-    try {
-        const videosCollection = adminDb.collection('videos');
-        const snapshot = await videosCollection.orderBy('createdAt', 'desc').get();
-        if (snapshot.empty) {
-            return [];
-        }
+  try {
+    const snapshot = await adminDb
+      .collection('videos')
+      .orderBy('createdAt', 'desc')
+      .get();
 
-        // Process all videos, enriching them if necessary
-        const videoPromises = snapshot.docs.map(fetchAndEnrichVideo);
-        const resolvedVideos = await Promise.all(videoPromises);
+    const videoPromises = snapshot.docs.map((doc) => {
+      const data = doc.data() as VideoConfig;
+      return fetchYouTubeDetails(data);
+    });
 
-        return resolvedVideos;
-
-    } catch (error) {
-        console.error("Error fetching videos from Firestore:", error);
-        return [];
-    }
+    const resolvedVideos = await Promise.all(videoPromises);
+    return resolvedVideos.filter((v): v is YouTubeVideo => v !== null);
+  } catch (err) {
+    console.error('Error fetching videos:', err);
+    return [];
+  }
 }
 
 export async function getVideoById(id: string): Promise<YouTubeVideo> {
-  try {
-    const docRef = adminDb.collection('videos').doc(id);
-    const doc = await docRef.get();
-
-    if (!doc.exists) {
-        notFound();
-    }
-
-    // Enrich the single video if needed
-    const enrichedVideo = await fetchAndEnrichVideo(doc as FirebaseFirestore.QueryDocumentSnapshot);
-    return enrichedVideo;
-
-  } catch (error) {
-    console.error("Error fetching video by ID from Firestore:", error);
+  const videos = await getVideos();
+  const video = videos.find((v) => v.id === id);
+  if (!video) {
     notFound();
   }
-}
+  return video;
+      }
+      
