@@ -134,4 +134,5 @@ To add a new video, you must add a new document to the `videos` collection. Each
 
 The app will automatically fetch the video's title, description, and thumbnail from YouTube using the provided `youtubeUrl`.
 
+
 ---

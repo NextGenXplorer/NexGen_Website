@@ -1,28 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin'; // Admin SDK
-import jwt from 'jsonwebtoken';
-import { cookies } from 'next/headers';
+import { verifyAdmin } from '@/lib/auth';
 import { revalidatePath } from 'next/cache';
-
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) {
-  throw new Error('Missing JWT_SECRET from environment variables.');
-}
-
-// Verify admin session via cookie
-function verifyAdmin(): boolean {
-  const cookieStore = cookies();
-  const token = cookieStore.get('admin_session')?.value;
-  if (!token) return false;
-
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    return typeof decoded === 'object' && decoded.isAdmin === true;
-  } catch (error) {
-    console.log("Admin verification failed:", error);
-    return false;
-  }
-}
 
 function getYouTubeId(url: string): string | null {
   const regExp =
@@ -34,7 +13,7 @@ function getYouTubeId(url: string): string | null {
 // GET videos (public for public videos, full list for admin)
 export async function GET() {
   try {
-    const isAdmin = verifyAdmin();
+    const isAdmin = await verifyAdmin();
 
     const videosQuery = isAdmin
       ? adminDb.collection('videos').orderBy('createdAt', 'desc')
@@ -56,7 +35,7 @@ export async function GET() {
 
 // POST a new video (admin only)
 export async function POST(request: NextRequest) {
-  if (!verifyAdmin()) {
+  if (!(await verifyAdmin())) {
     return new NextResponse(JSON.stringify({ message: 'Unauthorized' }), { status: 401 });
   }
 
@@ -112,7 +91,7 @@ export async function POST(request: NextRequest) {
 
 // DELETE a video (admin only)
 export async function DELETE(request: NextRequest) {
-  if (!verifyAdmin()) {
+  if (!(await verifyAdmin())) {
     return new NextResponse(JSON.stringify({ message: 'Unauthorized' }), { status: 401 });
   }
 

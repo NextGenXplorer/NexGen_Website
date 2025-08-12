@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { onAuthStateChanged, signOut, User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
@@ -30,6 +30,7 @@ function AdminPanel() {
   const [isPublic, setIsPublic] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [visitorCount, setVisitorCount] = useState<number | null>(null);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const router = useRouter();
 
@@ -40,20 +41,27 @@ function AdminPanel() {
     return () => unsubscribe();
   }, []);
 
-  useEffect(() => {
-    fetchVideos();
+  const fetchVisitorStats = useCallback(async () => {
+    try {
+      const response = await fetch('/api/stats');
+      if (!response.ok) throw new Error('Failed to fetch stats');
+      const data = await response.json();
+      setVisitorCount(data.count);
+    } catch (error) {
+      console.error('Failed to load visitor stats:', error);
+    }
   }, []);
 
-  const getAuthHeader = async (): Promise<HeadersInit> => {
+  const getAuthHeader = useCallback(async (): Promise<HeadersInit> => {
     const headers: HeadersInit = {};
     if (currentUser) {
       const token = await currentUser.getIdToken();
       headers['Authorization'] = `Bearer ${token}`;
     }
     return headers;
-  };
+  }, [currentUser]);
 
-  const fetchVideos = async () => {
+  const fetchVideos = useCallback(async () => {
     setIsLoading(true);
     try {
       const headers = await getAuthHeader(); // ✅ Include admin token
@@ -66,7 +74,12 @@ function AdminPanel() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [getAuthHeader]);
+
+  useEffect(() => {
+    fetchVideos();
+    fetchVisitorStats();
+  }, [fetchVideos, fetchVisitorStats]);
 
   const handleAddLink = () => setRelatedLinks([...relatedLinks, { label: '', url: '' }]);
 
@@ -159,6 +172,23 @@ function AdminPanel() {
       </Button>
 
       <h1 className="text-3xl font-bold mb-6 text-center">Admin Panel</h1>
+
+      {/* Visitor Stats */}
+      <Card className="mb-8">
+        <CardHeader>
+          <CardTitle>Site Statistics</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-lg">
+            Total Visitors:{" "}
+            {visitorCount !== null ? (
+              <span className="font-bold">{visitorCount}</span>
+            ) : (
+              <Spinner className="inline-block h-5 w-5" />
+            )}
+          </p>
+        </CardContent>
+      </Card>
 
       {/* Add New Video Form */}
       <Card className="mb-8">
