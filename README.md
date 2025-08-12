@@ -13,7 +13,7 @@ Our mission is to decode the future. We dissect and debate the technological for
 
 ## Key Features
 
-- **Dynamic Content:** All application content is managed through centralized JSON files (`src/data/content.json` and `src/data/videos.json`), making updates simple and straightforward.
+- **Dynamic Content:** Application content is managed through a combination of a centralized JSON file (`src/data/content.json`) for static text and social links, and a Firebase Firestore database for dynamic video content.
 - **Automatic Video Details:** The app automatically fetches video titles, descriptions, and thumbnails from YouTube, so you only need to provide the video URL.
 - **Responsive Design:** A modern, mobile-first design that ensures a seamless experience across all devices.
 - **Themed UI:** Built with a sleek, customizable dark/light mode toggle.
@@ -73,8 +73,8 @@ These are exposed to the browser and are safe to be public.
 -   `NEXT_PUBLIC_FIREBASE_APP_ID`: Your Firebase app ID.
 -   `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID`: Your Firebase measurement ID.
 
-#### Server-Side (Admin)
-These are used on the server and must be kept secret. They grant admin access to your Firebase project.
+#### Server-Side (Admin & Content)
+These are used on the server and must be kept secret. They grant admin access to your Firebase project, which is required for fetching video content from Firestore and for admin panel authentication.
 -   `FIREBASE_PROJECT_ID`: Your Firebase project ID.
 -   `FIREBASE_PRIVATE_KEY`: Your Firebase private key (the full key, including the header and footer).
 -   `FIREBASE_CLIENT_EMAIL`: Your Firebase client email.
@@ -93,10 +93,12 @@ Contributions are welcome! Please see our [Contributing Guidelines](CONTRIBUTING
 
 ## Content Management
 
-Most text and links are stored in `src/data/content.json`. Video information is stored in `src/data/videos.json`. To add a new video, simply add its `youtubeUrl` to the `videos.json` file. The app will automatically fetch the title, description, and thumbnail.
+This project uses a hybrid approach for content management:
+
+### Static Content (`content.json`)
+General site information, such as the channel name, mission statement, author details, and social media links, is managed in `src/data/content.json`. This file allows for easy updates to the site's core text and branding.
 
 The `content.json` file has the following structure:
-
 ```json
 {
   "channelInfo": {
@@ -121,20 +123,15 @@ The `content.json` file has the following structure:
 }
 ```
 
-The `videos.json` file has the following structure:
+### Video Content (Firestore)
+Video information is stored in a **Firebase Firestore** collection named `videos`. This allows for dynamic and scalable management of video content without requiring a code deployment for updates.
 
-```json
-[
-  {
-    "youtubeUrl": "https://www.youtube.com/watch?v=VIDEO_ID",
-    "relatedLinks": [
-      {
-        "label": "Link Label",
-        "url": "https://example.com"
-      }
-    ]
-  }
-]
-```
+To add a new video, you must add a new document to the `videos` collection. Each document should have the following fields:
+
+-   `youtubeUrl` (string): The full URL of the YouTube video (e.g., `https://www.youtube.com/watch?v=VIDEO_ID`).
+-   `relatedLinks` (array of maps): A list of related links, where each link has a `label` (string) and a `url` (string).
+-   `createdAt` (timestamp): The timestamp of when the video was added. This is used for ordering.
+
+The app will automatically fetch the video's title, description, and thumbnail from YouTube using the provided `youtubeUrl`.
 
 ---
