@@ -15,7 +15,7 @@ export async function POST(request: Request) {
 
     if (password === ADMIN_PASSWORD) {
       // Create JWT
-      const token = jwt.sign({ isAdmin: true }, JWT_SECRET, {
+      const token = jwt.sign({ isAdmin: true }, JWT_SECRET!, {
         expiresIn: '1d', // Token expires in 1 day
       });
 

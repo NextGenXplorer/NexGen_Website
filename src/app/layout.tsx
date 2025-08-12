@@ -4,6 +4,7 @@ import { Toaster } from '@/components/ui/toaster';
 import Navbar from '@/components/layout/navbar';
 import Footer from '@/components/layout/footer';
 import { ThemeProvider } from '@/components/theme-provider';
+import { VisitorTracker } from '@/components/visitor-tracker';
 
 export const metadata: Metadata = {
   title: 'NextGenXplorer | The Future is Now',
@@ -46,6 +47,7 @@ export default function RootLayout({
             <Footer />
           </div>
           <Toaster />
+          <VisitorTracker />
         </ThemeProvider>
       </body>
     </html>

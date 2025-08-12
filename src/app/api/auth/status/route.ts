@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { cookies } from 'next/headers';
+
+interface AdminJwtPayload extends JwtPayload {
+  isAdmin: boolean;
+}
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -9,7 +13,7 @@ if (!JWT_SECRET) {
 }
 
 export async function GET() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const token = cookieStore.get('admin_session')?.value;
 
   if (!token) {
@@ -17,8 +21,8 @@ export async function GET() {
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    if (typeof decoded === 'object' && decoded.isAdmin === true) {
+    const decoded = jwt.verify(token, JWT_SECRET!) as AdminJwtPayload;
+    if (decoded.isAdmin) {
       return new NextResponse(JSON.stringify({ isAuthenticated: true }), { status: 200 });
     }
     return new NextResponse(JSON.stringify({ isAuthenticated: false }), { status: 200 });
