@@ -40,14 +40,52 @@ To run the app locally, clone the repository and follow these steps:
     npm install
     ```
 
-2.  **Run the Development Server:**
+2.  **Set Up Environment Variables:**
+    Create a `.env` file in the root of the project and add the necessary environment variables. See the "Environment Variables" section below for details.
+
+3.  **Run the Development Server:**
     Start the development server.
     ```bash
     npm run dev
     ```
 
-3.  **Open in Browser:**
+4.  **Open in Browser:**
     Open [http://localhost:9002](http://localhost:9002) with your browser to see the result.
+
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to a `.env` file. You can use the `.env.example` file as a template.
+
+### Admin Authentication
+-   `ADMIN_PASSWORD`: A secure password for accessing the admin panel.
+-   `JWT_SECRET`: A long, random, and secret string used for signing authentication tokens. You can generate one using `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`.
+
+### Firebase (for Content)
+The following variables are needed for the application to interact with Firebase services.
+
+#### Client-Side (Public)
+These are exposed to the browser and are safe to be public.
+-   `NEXT_PUBLIC_FIREBASE_API_KEY`: Your Firebase API key.
+-   `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`: Your Firebase auth domain.
+-   `NEXT_PUBLIC_FIREBASE_PROJECT_ID`: Your Firebase project ID.
+-   `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`: Your Firebase storage bucket.
+-   `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`: Your Firebase messaging sender ID.
+-   `NEXT_PUBLIC_FIREBASE_APP_ID`: Your Firebase app ID.
+-   `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID`: Your Firebase measurement ID.
+
+#### Server-Side (Admin)
+These are used on the server and must be kept secret. They grant admin access to your Firebase project.
+-   `FIREBASE_PROJECT_ID`: Your Firebase project ID.
+-   `FIREBASE_PRIVATE_KEY`: Your Firebase private key (the full key, including the header and footer).
+-   `FIREBASE_CLIENT_EMAIL`: Your Firebase client email.
+
+## Admin Authentication
+
+The admin panel is protected by a password-based authentication system that is separate from Firebase Authentication. To log in, navigate to the `/login` page and enter the password defined in your `ADMIN_PASSWORD` environment variable.
+
+## Deployment
+
+This project is configured for deployment on Netlify. The `netlify.toml` file in the root of the project contains the build settings. When you push to the main branch, Netlify will automatically build and deploy the site.
 
 ## Contributing
 
