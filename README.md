@@ -134,5 +134,61 @@ To add a new video, you must add a new document to the `videos` collection. Each
 
 The app will automatically fetch the video's title, description, and thumbnail from YouTube using the provided `youtubeUrl`.
 
+## Sequence Diagram(s)
+```mermaid
+sequenceDiagram
+  participant U as User Browser
+  participant VT as VisitorTracker (client)
+  participant ST as /api/stats (POST)
+  participant FB as Firestore (stats/visits)
 
+  U->>VT: Load app
+  VT->>VT: Check sessionStorage 'hasBeenCounted'
+  alt Not counted
+    VT->>ST: POST /api/stats
+    ST->>FB: Transaction: create or increment doc stats/visits
+    FB-->>ST: OK
+    ST-->>VT: { success: true }
+    VT->>VT: Set 'hasBeenCounted' = true
+  else Already counted
+    VT->>VT: Do nothing
+  end
+```
+
+```mermaid
+sequenceDiagram
+  participant Admin as Admin Browser
+  participant AP as Admin Page
+  participant VS as /api/stats (GET)
+  participant VA as verifyAdmin()
+  participant FB as Firestore
+
+  Admin->>AP: Open /admin
+  AP->>VS: GET /api/stats
+  VS->>VA: await verifyAdmin() (reads cookie, verifies JWT)
+  alt Authorized
+    VS->>FB: Read stats/visits
+    FB-->>VS: { count }
+    VS-->>AP: { count }
+    AP->>AP: Render visitor count
+  else Unauthorized
+    VS-->>AP: 401 Unauthorized
+    AP->>AP: Show error/fallback
+  end
+```
+
+```mermaid
+sequenceDiagram
+  participant Client as Client (admin/non-admin)
+  participant VAPI as /api/videos
+  participant VA as verifyAdmin()
+
+  Client->>VAPI: GET / POST / DELETE
+  VAPI->>VA: await verifyAdmin()
+  alt isAdmin
+    VAPI-->>Client: Admin-level response (all videos or mutation success)
+  else not admin
+    VAPI-->>Client: Public response or 401 Unauthorized
+  end
+```
 ---
