@@ -1,194 +1,629 @@
-# NextGenXplorer
+<div align="center">
 
-> Charting the course of tomorrow's technology, today.
+# 🚀 NextGenXplorer
 
-[![NPM Version](https://img.shields.io/badge/version-0.1.0-blue)](https://www.npmjs.com/package/nextn) [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Netlify Status](https://api.netlify.com/api/v1/badges/ea28765b-ed2e-446e-9d83-898a1aaf5b90/deploy-status)](https://app.netlify.com/projects/nextgenxplorer/deploys) [![Next.js](https://img.shields.io/badge/Made%20with-Next.js-black?logo=next.js)](https://nextjs.org) [![Tailwind CSS](https://img.shields.io/badge/Styled%20with-Tailwind%20CSS-38B2AC?logo=tailwind-css)](https://tailwindcss.com)
+### *Charting the course of tomorrow's technology, today.*
 
-Welcome to the official repository for **NextGenXplorer**, a digital think tank and media hub dedicated to exploring the future of technology and its impact on our world.
+[![NPM Version](https://img.shields.io/badge/version-0.1.0-blue)](https://www.npmjs.com/package/nextn)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/ea28765b-ed2e-446e-9d83-898a1aaf5b90/deploy-status)](https://app.netlify.com/projects/nextgenxplorer/deploys)
+[![Next.js](https://img.shields.io/badge/Made%20with-Next.js-black?logo=next.js)](https://nextjs.org)
+[![Tailwind CSS](https://img.shields.io/badge/Styled%20with-Tailwind%20CSS-38B2AC?logo=tailwind-css)](https://tailwindcss.com)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![Firebase](https://img.shields.io/badge/Firebase-11.9-orange?logo=firebase)](https://firebase.google.com/)
 
+**A modern, full-featured digital think tank and media hub exploring the future of technology**
 
-## Our Mission
+[Live Demo](https://nextgenxplorer.netlify.app) • [Report Bug](https://github.com/mithun50/NexGen_Website/issues) • [Request Feature](https://github.com/mithun50/NexGen_Website/issues)
 
-Our mission is to decode the future. We dissect and debate the technological forces—from artificial intelligence to quantum leaps—that are actively reshaping our world and defining the next chapter of human history. We produce visually striking, deeply researched content that demystifies the complex and provokes critical thought.
+</div>
 
-## Key Features
+---
 
-- **Dynamic Content:** Application content is managed through a combination of a centralized JSON file (`src/data/content.json`) for static text and social links, and a Firebase Firestore database for dynamic video content.
-- **Automatic Video Details:** The app automatically fetches video titles, descriptions, and thumbnails from YouTube, so you only need to provide the video URL.
-- **Responsive Design:** A modern, mobile-first design that ensures a seamless experience across all devices.
-- **Themed UI:** Built with a sleek, customizable dark/light mode toggle.
-- **Video Archives:** A dedicated section to explore our full repository of video content.
-- **Developer-Friendly:** Built with a modern tech stack for a robust and maintainable codebase.
+## 📋 Table of Contents
 
-## Tech Stack
+- [About](#-about)
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Quick Start](#-quick-start)
+- [Environment Setup](#-environment-setup)
+- [Project Structure](#-project-structure)
+- [Content Management](#-content-management)
+- [Admin Panel](#-admin-panel)
+- [API Reference](#-api-reference)
+- [Deployment](#-deployment)
+- [Contributing](#-contributing)
+- [License](#-license)
 
-This project is built with a curated selection of modern technologies:
+---
 
-- **Framework:** [Next.js](https://nextjs.org/) (App Router)
-- **Language:** [TypeScript](https://www.typescriptlang.org/)
-- **UI:** [React](https://react.dev/) & [ShadCN UI](https://ui.shadcn.com/)
-- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
-- **AI Integration:** [Genkit](https://firebase.google.com/docs/genkit) (for future generative AI features)
+## 🎯 About
 
-## Getting Started
+**NextGenXplorer** is a cutting-edge digital platform that decodes the future of technology. We dissect and debate technological forces—from artificial intelligence to quantum computing—that are actively reshaping our world and defining the next chapter of human history.
 
-To run the app locally, clone the repository and follow these steps:
+### Our Mission
 
-1.  **Install Dependencies:**
-    Navigate to the project directory and install the necessary packages.
-    ```bash
-    npm install
-    ```
+To produce visually striking, deeply researched content that demystifies complex technology and provokes critical thought about our digital future.
 
-2.  **Set Up Environment Variables:**
-    Create a `.env` file in the root of the project and add the necessary environment variables. See the "Environment Variables" section below for details.
+---
 
-3.  **Run the Development Server:**
-    Start the development server.
-    ```bash
-    npm run dev
-    ```
+## ✨ Features
 
-4.  **Open in Browser:**
-    Open [http://localhost:9002](http://localhost:9002) with your browser to see the result.
+### 🎬 **Video Content Management**
+- Dynamic video archives powered by Firebase Firestore
+- Automatic YouTube metadata fetching (titles, thumbnails, descriptions)
+- Public/Private video visibility controls
+- Related links for each video
+- Responsive video grid layout
 
-## Environment Variables
+### 📱 **Apps Distribution**
+- Dedicated apps page for software distribution
+- Support for external hosting (MediaFire, Google Drive, GitHub)
+- Logo and download URL management
+- Full CRUD operations via admin panel
 
-To run this project, you will need to add the following environment variables to a `.env` file. You can use the `.env.example` file as a template.
+### 👤 **Visitor Analytics**
+- Real-time visitor tracking
+- Session-based counting (prevents duplicates)
+- Admin dashboard with statistics
+- Firebase-powered analytics storage
 
-### Admin Authentication
--   `ADMIN_PASSWORD`: A secure password for accessing the admin panel.
--   `JWT_SECRET`: A long, random, and secret string used for signing authentication tokens. You can generate one using `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`.
+### 🔐 **Secure Admin Panel**
+- JWT-based authentication
+- Protected API routes
+- Video management (add, edit, delete, visibility toggle)
+- App management (add, edit, delete)
+- Visitor statistics dashboard
 
-### Firebase (for Content)
-The following variables are needed for the application to interact with Firebase services.
+### 🎨 **Modern UI/UX**
+- Dark/Light theme support
+- Fully responsive design (mobile-first)
+- Smooth animations and transitions
+- Accessible components (ARIA compliant)
+- ShadCN UI component library
 
-#### Client-Side (Public)
-These are exposed to the browser and are safe to be public.
--   `NEXT_PUBLIC_FIREBASE_API_KEY`: Your Firebase API key.
--   `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`: Your Firebase auth domain.
--   `NEXT_PUBLIC_FIREBASE_PROJECT_ID`: Your Firebase project ID.
--   `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`: Your Firebase storage bucket.
--   `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`: Your Firebase messaging sender ID.
--   `NEXT_PUBLIC_FIREBASE_APP_ID`: Your Firebase app ID.
--   `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID`: Your Firebase measurement ID.
+### 🔗 **Social Integration**
+- Dynamic social media links
+- Author profiles
+- Contact form integration
+- Multiple platform support
 
-#### Server-Side (Admin & Content)
-These are used on the server and must be kept secret. They grant admin access to your Firebase project, which is required for fetching video content from Firestore and for admin panel authentication.
--   `FIREBASE_PROJECT_ID`: Your Firebase project ID.
--   `FIREBASE_PRIVATE_KEY`: Your Firebase private key (the full key, including the header and footer).
--   `FIREBASE_CLIENT_EMAIL`: Your Firebase client email.
+---
 
-## Admin Authentication
+## 🛠️ Tech Stack
 
-The admin panel is protected by a password-based authentication system that is separate from Firebase Authentication. To log in, navigate to the `/login` page and enter the password defined in your `ADMIN_PASSWORD` environment variable.
+<table>
+<tr>
+<td>
 
-## Deployment
+**Frontend**
+- [Next.js 15](https://nextjs.org/) - React Framework
+- [TypeScript](https://www.typescriptlang.org/) - Type Safety
+- [Tailwind CSS](https://tailwindcss.com/) - Styling
+- [ShadCN UI](https://ui.shadcn.com/) - Component Library
+- [Lucide Icons](https://lucide.dev/) - Icon System
 
-This project is configured for deployment on Netlify. The `netlify.toml` file in the root of the project contains the build settings. When you push to the main branch, Netlify will automatically build and deploy the site.
+</td>
+<td>
 
-## Contributing
+**Backend & Database**
+- [Firebase Firestore](https://firebase.google.com/docs/firestore) - Database
+- [Firebase Storage](https://firebase.google.com/docs/storage) - File Storage
+- [Firebase Auth](https://firebase.google.com/docs/auth) - Authentication
+- [Next.js API Routes](https://nextjs.org/docs/app/building-your-application/routing/route-handlers) - Backend API
 
-Contributions are welcome! Please see our [Contributing Guidelines](CONTRIBUTING.md) to get started.
+</td>
+</tr>
+<tr>
+<td>
 
-## Content Management
+**Development Tools**
+- [ESLint](https://eslint.org/) - Code Linting
+- [TypeScript](https://www.typescriptlang.org/) - Type Checking
+- [Prettier](https://prettier.io/) - Code Formatting
 
-This project uses a hybrid approach for content management:
+</td>
+<td>
+
+**Deployment & Hosting**
+- [Netlify](https://www.netlify.com/) - Hosting Platform
+- [GitHub Actions](https://github.com/features/actions) - CI/CD
+- [Vercel](https://vercel.com/) - Alternative Hosting
+
+</td>
+</tr>
+</table>
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js 18+ and npm
+- Firebase account and project
+- Git
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/mithun50/NexGen_Website.git
+   cd NexGen_Website
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   ```
+   Edit `.env` and add your Firebase credentials (see [Environment Setup](#-environment-setup))
+
+4. **Run development server**
+   ```bash
+   npm run dev
+   ```
+
+5. **Open in browser**
+   Navigate to [http://localhost:9002](http://localhost:9002)
+
+### Available Scripts
+
+```bash
+npm run dev          # Start development server
+npm run build        # Build for production
+npm start            # Start production server
+npm run lint         # Run ESLint
+npm run typecheck    # Run TypeScript type checking
+```
+
+---
+
+## ⚙️ Environment Setup
+
+Create a `.env` file in the root directory with the following variables:
+
+### 🔑 Admin Authentication
+
+```env
+ADMIN_PASSWORD=your_secure_admin_password
+JWT_SECRET=your_jwt_secret_key_here
+```
+
+> **Generate JWT Secret:**
+> ```bash
+> node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+> ```
+
+### 🔥 Firebase Configuration
+
+#### Client-Side (Public - Safe to expose)
+
+```env
+NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_auth_domain
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your_measurement_id
+```
+
+#### Server-Side (Private - Keep secure)
+
+```env
+FIREBASE_PROJECT_ID=your_project_id
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+FIREBASE_CLIENT_EMAIL=your_service_account@your_project.iam.gserviceaccount.com
+```
+
+> **Alternative:** Use service account JSON
+> ```env
+> FIREBASE_SERVICE_ACCOUNT_JSON='{"type":"service_account","project_id":"..."}'
+> ```
+
+---
+
+## 📁 Project Structure
+
+```
+NexGen_Website/
+├── src/
+│   ├── app/                      # Next.js App Router
+│   │   ├── (pages)/
+│   │   │   ├── page.tsx          # Home page
+│   │   │   ├── about/            # About page
+│   │   │   ├── apps/             # Apps distribution page
+│   │   │   ├── contact/          # Contact page
+│   │   │   ├── socials/          # Social links page
+│   │   │   ├── youtube/          # Video archives
+│   │   │   └── admin/            # Admin panel
+│   │   ├── api/                  # API Routes
+│   │   │   ├── apps/             # Apps CRUD operations
+│   │   │   ├── videos/           # Video management
+│   │   │   ├── stats/            # Visitor analytics
+│   │   │   └── auth/             # Authentication
+│   │   ├── layout.tsx            # Root layout
+│   │   └── globals.css           # Global styles
+│   ├── components/               # React components
+│   │   ├── ui/                   # ShadCN UI components
+│   │   ├── layout/               # Layout components
+│   │   │   ├── navbar.tsx
+│   │   │   └── footer.tsx
+│   │   ├── auth/                 # Auth components
+│   │   └── visitor-tracker.tsx   # Analytics
+│   ├── lib/                      # Utility libraries
+│   │   ├── firebase.ts           # Firebase client
+│   │   ├── firebase-admin.ts     # Firebase admin
+│   │   ├── auth.ts               # Auth utilities
+│   │   └── utils.ts              # Helper functions
+│   ├── hooks/                    # Custom React hooks
+│   └── data/                     # Static data
+│       └── content.json          # Site content
+├── public/                       # Static assets
+├── .env                          # Environment variables
+├── next.config.js                # Next.js configuration
+├── tailwind.config.ts            # Tailwind configuration
+├── tsconfig.json                 # TypeScript configuration
+└── package.json                  # Dependencies
+```
+
+---
+
+## 📝 Content Management
 
 ### Static Content (`content.json`)
-General site information, such as the channel name, mission statement, author details, and social media links, is managed in `src/data/content.json`. This file allows for easy updates to the site's core text and branding.
 
-The `content.json` file has the following structure:
+Manage site-wide content like channel info, social links, and author details:
+
 ```json
 {
   "channelInfo": {
     "name": "NextGenXplorer",
-    "goal": "...",
-    "about": "..."
+    "goal": "Exploring the future of technology",
+    "about": "A digital think tank dedicated to..."
   },
   "socials": [
     {
       "name": "YouTube",
-      "url": "https://youtube.com/@yourchannel",
-      "handle": "@yourchannel"
+      "url": "https://youtube.com/@nextgenxplorer",
+      "handle": "@nextgenxplorer"
     }
   ],
   "authors": [
     {
-      "name": "Author Name",
-      "url": "https://instagram.com/authorprofile",
-      "handle": "@authorprofile"
+      "name": "Your Name",
+      "url": "https://instagram.com/yourhandle",
+      "handle": "@yourhandle"
     }
   ]
 }
 ```
 
-### Video Content (Firestore)
-Video information is stored in a **Firebase Firestore** collection named `videos`. This allows for dynamic and scalable management of video content without requiring a code deployment for updates.
+### Dynamic Content (Firestore)
 
-To add a new video, you must add a new document to the `videos` collection. Each document should have the following fields:
+#### Videos Collection
 
--   `youtubeUrl` (string): The full URL of the YouTube video (e.g., `https://www.youtube.com/watch?v=VIDEO_ID`).
--   `relatedLinks` (array of maps): A list of related links, where each link has a `label` (string) and a `url` (string).
--   `createdAt` (timestamp): The timestamp of when the video was added. This is used for ordering.
+Videos are stored in Firebase Firestore under the `videos` collection:
 
-The app will automatically fetch the video's title, description, and thumbnail from YouTube using the provided `youtubeUrl`.
-
-## Sequence Diagram(s)
-```mermaid
-sequenceDiagram
-  participant U as User Browser
-  participant VT as VisitorTracker (client)
-  participant ST as /api/stats (POST)
-  participant FB as Firestore (stats/visits)
-
-  U->>VT: Load app
-  VT->>VT: Check sessionStorage 'hasBeenCounted'
-  alt Not counted
-    VT->>ST: POST /api/stats
-    ST->>FB: Transaction: create or increment doc stats/visits
-    FB-->>ST: OK
-    ST-->>VT: { success: true }
-    VT->>VT: Set 'hasBeenCounted' = true
-  else Already counted
-    VT->>VT: Do nothing
-  end
+**Document Structure:**
+```typescript
+{
+  id: string;                    // Auto-generated
+  youtubeUrl: string;            // Full YouTube URL
+  youtubeId: string;             // Extracted video ID
+  title: string;                 // Fetched from YouTube
+  description: string;           // Fetched from YouTube
+  thumbnailUrl: string;          // Max resolution thumbnail
+  relatedLinks: Array<{
+    label: string;
+    url: string;
+  }>;
+  isPublic: boolean;             // Visibility flag
+  createdAt: Timestamp;          // Creation date
+}
 ```
 
-```mermaid
-sequenceDiagram
-  participant Admin as Admin Browser
-  participant AP as Admin Page
-  participant VS as /api/stats (GET)
-  participant VA as verifyAdmin()
-  participant FB as Firestore
+#### Apps Collection
 
-  Admin->>AP: Open /admin
-  AP->>VS: GET /api/stats
-  VS->>VA: await verifyAdmin() (reads cookie, verifies JWT)
-  alt Authorized
-    VS->>FB: Read stats/visits
-    FB-->>VS: { count }
-    VS-->>AP: { count }
-    AP->>AP: Render visitor count
-  else Unauthorized
-    VS-->>AP: 401 Unauthorized
-    AP->>AP: Show error/fallback
-  end
+Apps are stored in the `apps` collection:
+
+**Document Structure:**
+```typescript
+{
+  id: string;                    // Auto-generated
+  name: string;                  // App name
+  description: string;           // App description
+  logoUrl: string;               // Logo image URL
+  downloadUrl: string;           // Download link
+  createdAt: Timestamp;          // Creation date
+  updatedAt?: Timestamp;         // Last update
+}
 ```
 
-```mermaid
-sequenceDiagram
-  participant Client as Client (admin/non-admin)
-  participant VAPI as /api/videos
-  participant VA as verifyAdmin()
+#### Stats Collection
 
-  Client->>VAPI: GET / POST / DELETE
-  VAPI->>VA: await verifyAdmin()
-  alt isAdmin
-    VAPI-->>Client: Admin-level response (all videos or mutation success)
-  else not admin
-    VAPI-->>Client: Public response or 401 Unauthorized
-  end
+Visitor statistics are stored in `stats/visits`:
+
+```typescript
+{
+  count: number;                 // Total visitor count
+}
 ```
+
 ---
+
+## 🔐 Admin Panel
+
+Access the admin panel at `/admin` after logging in at `/login`.
+
+### Features
+
+#### 📊 **Dashboard**
+- Real-time visitor statistics
+- Quick overview of content
+
+#### 🎬 **Video Management**
+- **Add Videos:** Paste YouTube URL, add related links, set visibility
+- **Edit Videos:** Modify related links and visibility
+- **Delete Videos:** Remove videos from archive
+- **Auto-fetch:** Automatically retrieves video metadata
+
+#### 📱 **App Management**
+- **Add Apps:** Name, description, logo URL, download URL
+- **Edit Apps:** Update app information and links
+- **Delete Apps:** Remove apps from distribution
+
+### Authentication Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Login Page
+    participant API
+    participant Firebase
+
+    User->>Login Page: Enter password
+    Login Page->>API: POST /api/auth/login
+    API->>API: Verify password
+    API->>User: Set JWT cookie
+    User->>Admin Panel: Access /admin
+    Admin Panel->>API: Request with cookie
+    API->>API: Verify JWT
+    API->>Firebase: Fetch data
+    Firebase-->>API: Return data
+    API-->>Admin Panel: Display data
+```
+
+---
+
+## 🔌 API Reference
+
+### Videos API
+
+#### `GET /api/videos`
+Fetch videos (public or all for admin)
+
+**Response:**
+```json
+[
+  {
+    "id": "video123",
+    "youtubeUrl": "https://youtube.com/watch?v=...",
+    "title": "Video Title",
+    "thumbnailUrl": "https://...",
+    "relatedLinks": [],
+    "isPublic": true
+  }
+]
+```
+
+#### `POST /api/videos`
+Add new video (admin only)
+
+**Request:**
+```json
+{
+  "youtubeUrl": "https://youtube.com/watch?v=...",
+  "relatedLinks": [{"label": "Link", "url": "https://..."}],
+  "isPublic": true
+}
+```
+
+#### `DELETE /api/videos`
+Delete video (admin only)
+
+**Request:**
+```json
+{
+  "id": "video123"
+}
+```
+
+### Apps API
+
+#### `GET /api/apps`
+Fetch all apps (public)
+
+#### `POST /api/apps`
+Add new app (admin only)
+
+**Request:**
+```json
+{
+  "name": "My App",
+  "description": "App description",
+  "logoUrl": "https://...",
+  "downloadUrl": "https://..."
+}
+```
+
+#### `PUT /api/apps`
+Update app (admin only)
+
+**Request:**
+```json
+{
+  "id": "app123",
+  "name": "Updated Name",
+  "description": "Updated description",
+  "logoUrl": "https://...",
+  "downloadUrl": "https://..."
+}
+```
+
+#### `DELETE /api/apps`
+Delete app (admin only)
+
+### Stats API
+
+#### `GET /api/stats`
+Get visitor count (admin only)
+
+#### `POST /api/stats`
+Increment visitor count (public)
+
+---
+
+## 🚢 Deployment
+
+### Netlify (Recommended)
+
+1. **Connect Repository**
+   - Link your GitHub repository to Netlify
+
+2. **Configure Build Settings**
+   ```toml
+   [build]
+     command = "npm run build"
+     publish = ".next"
+   ```
+
+3. **Set Environment Variables**
+   - Add all `.env` variables in Netlify dashboard
+
+4. **Deploy**
+   - Push to `main` branch triggers automatic deployment
+
+### Vercel Alternative
+
+```bash
+npm install -g vercel
+vercel --prod
+```
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Here's how to get started:
+
+1. **Fork the repository**
+2. **Create a feature branch**
+   ```bash
+   git checkout -b feature/amazing-feature
+   ```
+3. **Commit your changes**
+   ```bash
+   git commit -m 'Add amazing feature'
+   ```
+4. **Push to branch**
+   ```bash
+   git push origin feature/amazing-feature
+   ```
+5. **Open a Pull Request**
+
+### Contribution Guidelines
+
+- Follow TypeScript best practices
+- Maintain existing code style
+- Write meaningful commit messages
+- Test thoroughly before submitting
+- Update documentation as needed
+
+---
+
+## 📊 Architecture Diagrams
+
+### Visitor Tracking Flow
+
+```mermaid
+sequenceDiagram
+    participant Browser
+    participant VisitorTracker
+    participant API
+    participant Firestore
+
+    Browser->>VisitorTracker: Load page
+    VisitorTracker->>VisitorTracker: Check session storage
+    alt Not counted
+        VisitorTracker->>API: POST /api/stats
+        API->>Firestore: Increment count
+        Firestore-->>API: Success
+        API-->>VisitorTracker: { success: true }
+        VisitorTracker->>VisitorTracker: Mark as counted
+    else Already counted
+        VisitorTracker->>VisitorTracker: Skip tracking
+    end
+```
+
+### Admin Authentication Flow
+
+```mermaid
+sequenceDiagram
+    participant Admin
+    participant AdminPage
+    participant API
+    participant verifyAdmin
+    participant Firestore
+
+    Admin->>AdminPage: Access /admin
+    AdminPage->>API: GET /api/stats
+    API->>verifyAdmin: Verify JWT cookie
+    alt Authorized
+        API->>Firestore: Read stats
+        Firestore-->>API: Return data
+        API-->>AdminPage: Display data
+    else Unauthorized
+        API-->>AdminPage: 401 Error
+        AdminPage->>AdminPage: Redirect to login
+    end
+```
+
+---
+
+## 📄 License
+
+This project is licensed under the **Apache License 2.0** - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- [Next.js](https://nextjs.org/) - The React Framework
+- [Firebase](https://firebase.google.com/) - Backend infrastructure
+- [ShadCN UI](https://ui.shadcn.com/) - Beautiful components
+- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS
+- [Lucide Icons](https://lucide.dev/) - Icon library
+
+---
+
+## 📞 Support
+
+- 🐛 [Report Issues](https://github.com/mithun50/NexGen_Website/issues)
+- 💬 [Discussions](https://github.com/mithun50/NexGen_Website/discussions)
+- 📧 Contact: [Your Email]
+
+---
+
+<div align="center">
+
+**Made with ❤️ by NextGenXplorer Team**
+
+⭐ Star us on GitHub if you find this project useful!
+
+</div>

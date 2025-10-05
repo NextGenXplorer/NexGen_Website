@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Trash2, LogOut } from 'lucide-react';
+import { Trash2, LogOut, Pencil } from 'lucide-react';
 import { Spinner } from '@/components/ui/spinner';
 import { Switch } from '@/components/ui/switch';
 
@@ -19,6 +19,14 @@ interface Video {
   youtubeUrl: string;
   relatedLinks: { label: string; url: string }[];
   isPublic?: boolean;
+}
+
+interface App {
+  id: string;
+  name: string;
+  description: string;
+  logoUrl: string;
+  downloadUrl: string;
 }
 
 function AdminPanel() {
@@ -33,6 +41,15 @@ function AdminPanel() {
   const [visitorCount, setVisitorCount] = useState<number | null>(null);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const router = useRouter();
+
+  // Apps state
+  const [apps, setApps] = useState<App[]>([]);
+  const [appName, setAppName] = useState('');
+  const [appDescription, setAppDescription] = useState('');
+  const [appLogoUrl, setAppLogoUrl] = useState('');
+  const [appDownloadUrl, setAppDownloadUrl] = useState('');
+  const [isUploadingApp, setIsUploadingApp] = useState(false);
+  const [editingApp, setEditingApp] = useState<App | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -76,10 +93,23 @@ function AdminPanel() {
     }
   }, [getAuthHeader]);
 
+  const fetchApps = useCallback(async () => {
+    try {
+      const headers = await getAuthHeader();
+      const response = await fetch('/api/apps', { headers });
+      if (!response.ok) throw new Error('Failed to fetch apps');
+      const data = await response.json();
+      setApps(data);
+    } catch (error) {
+      console.error('Failed to load apps:', error);
+    }
+  }, [getAuthHeader]);
+
   useEffect(() => {
     fetchVideos();
     fetchVisitorStats();
-  }, [fetchVideos, fetchVisitorStats]);
+    fetchApps();
+  }, [fetchVideos, fetchVisitorStats, fetchApps]);
 
   const handleAddLink = () => setRelatedLinks([...relatedLinks, { label: '', url: '' }]);
 
@@ -157,6 +187,110 @@ function AdminPanel() {
     } catch (error) {
       console.error('Logout failed:', error);
       setError('Failed to log out. Please try again.');
+    }
+  };
+
+  const handleAppSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    if (!appName || !appLogoUrl || !appDownloadUrl) {
+      setError('App name, logo URL, and download URL are required.');
+      return;
+    }
+    setIsUploadingApp(true);
+    try {
+      const headers = await getAuthHeader();
+
+      if (editingApp) {
+        // Update existing app
+        const response = await fetch('/api/apps', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', ...headers },
+          body: JSON.stringify({
+            id: editingApp.id,
+            name: appName,
+            description: appDescription,
+            logoUrl: appLogoUrl,
+            downloadUrl: appDownloadUrl,
+          }),
+        });
+        if (!response.ok) {
+          const { message } = await response.json();
+          throw new Error(message || 'Failed to update app');
+        }
+        setEditingApp(null);
+      } else {
+        // Create new app
+        const response = await fetch('/api/apps', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...headers },
+          body: JSON.stringify({
+            name: appName,
+            description: appDescription,
+            logoUrl: appLogoUrl,
+            downloadUrl: appDownloadUrl,
+          }),
+        });
+        if (!response.ok) {
+          const { message } = await response.json();
+          throw new Error(message || 'Failed to add app');
+        }
+      }
+
+      setAppName('');
+      setAppDescription('');
+      setAppLogoUrl('');
+      setAppDownloadUrl('');
+      fetchApps();
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unexpected error occurred.');
+      }
+    } finally {
+      setIsUploadingApp(false);
+    }
+  };
+
+  const handleEditApp = (app: App) => {
+    setEditingApp(app);
+    setAppName(app.name);
+    setAppDescription(app.description);
+    setAppLogoUrl(app.logoUrl);
+    setAppDownloadUrl(app.downloadUrl);
+    // Scroll to form
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingApp(null);
+    setAppName('');
+    setAppDescription('');
+    setAppLogoUrl('');
+    setAppDownloadUrl('');
+  };
+
+  const handleDeleteApp = async (appId: string) => {
+    setError(null);
+    try {
+      const headers = await getAuthHeader();
+      const response = await fetch('/api/apps', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json', ...headers },
+        body: JSON.stringify({ id: appId }),
+      });
+      if (!response.ok) {
+        const { message } = await response.json();
+        throw new Error(message || 'Failed to delete app');
+      }
+      fetchApps();
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unexpected error occurred.');
+      }
     }
   };
 
@@ -265,7 +399,7 @@ function AdminPanel() {
       </Card>
 
       {/* Manage Videos */}
-      <Card>
+      <Card className="mb-8">
         <CardHeader>
           <CardTitle>Manage Videos</CardTitle>
         </CardHeader>
@@ -301,6 +435,138 @@ function AdminPanel() {
             </ul>
           ) : (
             <p>No videos found. Add one above to get started.</p>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Add/Edit App Form */}
+      <Card className="mb-8">
+        <CardHeader>
+          <CardTitle>{editingApp ? 'Edit App' : 'Add New App'}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleAppSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="appName">App Name</Label>
+              <Input
+                id="appName"
+                type="text"
+                placeholder="My App"
+                value={appName}
+                onChange={(e) => setAppName(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="appDescription">Description (Optional)</Label>
+              <Input
+                id="appDescription"
+                type="text"
+                placeholder="App description"
+                value={appDescription}
+                onChange={(e) => setAppDescription(e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="appLogoUrl">App Logo URL</Label>
+              <Input
+                id="appLogoUrl"
+                type="url"
+                placeholder="https://example.com/logo.png"
+                value={appLogoUrl}
+                onChange={(e) => setAppLogoUrl(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="appDownloadUrl">App Download URL</Label>
+              <Input
+                id="appDownloadUrl"
+                type="url"
+                placeholder="https://example.com/app.apk"
+                value={appDownloadUrl}
+                onChange={(e) => setAppDownloadUrl(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="flex gap-2">
+              <Button type="submit" disabled={isUploadingApp}>
+                {isUploadingApp ? (
+                  <>
+                    <Spinner className="h-4 w-4 mr-2" />
+                    {editingApp ? 'Updating...' : 'Adding...'}
+                  </>
+                ) : (
+                  editingApp ? 'Update App' : 'Add App'
+                )}
+              </Button>
+              {editingApp && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleCancelEdit}
+                >
+                  Cancel
+                </Button>
+              )}
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+
+      {/* Manage Apps */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Manage Apps</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {apps.length > 0 ? (
+            <ul className="space-y-4">
+              {apps.map((app) => (
+                <li
+                  key={app.id}
+                  className="flex items-center justify-between p-4 border rounded-lg"
+                >
+                  <div className="flex items-center gap-4">
+                    <img
+                      src={app.logoUrl}
+                      alt={app.name}
+                      className="w-12 h-12 rounded object-cover"
+                    />
+                    <div>
+                      <p className="font-semibold">{app.name}</p>
+                      {app.description && (
+                        <p className="text-sm text-muted-foreground">
+                          {app.description}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => handleEditApp(app)}
+                    >
+                      <Pencil className="h-4 w-4 mr-2" />
+                      Edit
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      onClick={() => handleDeleteApp(app.id)}
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Delete
+                    </Button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No apps found. Add one above to get started.</p>
           )}
         </CardContent>
       </Card>

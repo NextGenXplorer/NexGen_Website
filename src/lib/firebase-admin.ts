@@ -28,3 +28,4 @@ if (serviceAccount) {
 
 
 export const adminDb = admin.firestore();
+export const adminStorage = admin.storage();
