@@ -21,6 +21,7 @@ import { ThemeToggle } from '../theme-toggle';
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/youtube', label: 'Archives' },
+  { href: '/apps', label: 'Apps' },
   { href: '/socials', label: 'Socials' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
