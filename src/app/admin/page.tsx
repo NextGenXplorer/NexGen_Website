@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Trash2, LogOut } from 'lucide-react';
+import { Trash2, LogOut, Pencil } from 'lucide-react';
 import { Spinner } from '@/components/ui/spinner';
 import { Switch } from '@/components/ui/switch';
 
@@ -49,6 +49,7 @@ function AdminPanel() {
   const [appLogoUrl, setAppLogoUrl] = useState('');
   const [appDownloadUrl, setAppDownloadUrl] = useState('');
   const [isUploadingApp, setIsUploadingApp] = useState(false);
+  const [editingApp, setEditingApp] = useState<App | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -199,20 +200,43 @@ function AdminPanel() {
     setIsUploadingApp(true);
     try {
       const headers = await getAuthHeader();
-      const response = await fetch('/api/apps', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...headers },
-        body: JSON.stringify({
-          name: appName,
-          description: appDescription,
-          logoUrl: appLogoUrl,
-          downloadUrl: appDownloadUrl,
-        }),
-      });
-      if (!response.ok) {
-        const { message } = await response.json();
-        throw new Error(message || 'Failed to add app');
+
+      if (editingApp) {
+        // Update existing app
+        const response = await fetch('/api/apps', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', ...headers },
+          body: JSON.stringify({
+            id: editingApp.id,
+            name: appName,
+            description: appDescription,
+            logoUrl: appLogoUrl,
+            downloadUrl: appDownloadUrl,
+          }),
+        });
+        if (!response.ok) {
+          const { message } = await response.json();
+          throw new Error(message || 'Failed to update app');
+        }
+        setEditingApp(null);
+      } else {
+        // Create new app
+        const response = await fetch('/api/apps', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...headers },
+          body: JSON.stringify({
+            name: appName,
+            description: appDescription,
+            logoUrl: appLogoUrl,
+            downloadUrl: appDownloadUrl,
+          }),
+        });
+        if (!response.ok) {
+          const { message } = await response.json();
+          throw new Error(message || 'Failed to add app');
+        }
       }
+
       setAppName('');
       setAppDescription('');
       setAppLogoUrl('');
@@ -227,6 +251,24 @@ function AdminPanel() {
     } finally {
       setIsUploadingApp(false);
     }
+  };
+
+  const handleEditApp = (app: App) => {
+    setEditingApp(app);
+    setAppName(app.name);
+    setAppDescription(app.description);
+    setAppLogoUrl(app.logoUrl);
+    setAppDownloadUrl(app.downloadUrl);
+    // Scroll to form
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingApp(null);
+    setAppName('');
+    setAppDescription('');
+    setAppLogoUrl('');
+    setAppDownloadUrl('');
   };
 
   const handleDeleteApp = async (appId: string) => {
@@ -397,10 +439,10 @@ function AdminPanel() {
         </CardContent>
       </Card>
 
-      {/* Add New App Form */}
+      {/* Add/Edit App Form */}
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle>Add New App</CardTitle>
+          <CardTitle>{editingApp ? 'Edit App' : 'Add New App'}</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleAppSubmit} className="space-y-6">
@@ -451,16 +493,27 @@ function AdminPanel() {
               />
             </div>
 
-            <Button type="submit" disabled={isUploadingApp}>
-              {isUploadingApp ? (
-                <>
-                  <Spinner className="h-4 w-4 mr-2" />
-                  Adding...
-                </>
-              ) : (
-                'Add App'
+            <div className="flex gap-2">
+              <Button type="submit" disabled={isUploadingApp}>
+                {isUploadingApp ? (
+                  <>
+                    <Spinner className="h-4 w-4 mr-2" />
+                    {editingApp ? 'Updating...' : 'Adding...'}
+                  </>
+                ) : (
+                  editingApp ? 'Update App' : 'Add App'
+                )}
+              </Button>
+              {editingApp && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleCancelEdit}
+                >
+                  Cancel
+                </Button>
               )}
-            </Button>
+            </div>
           </form>
         </CardContent>
       </Card>
@@ -493,13 +546,22 @@ function AdminPanel() {
                       )}
                     </div>
                   </div>
-                  <Button
-                    variant="destructive"
-                    onClick={() => handleDeleteApp(app.id)}
-                  >
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Delete
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => handleEditApp(app)}
+                    >
+                      <Pencil className="h-4 w-4 mr-2" />
+                      Edit
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      onClick={() => handleDeleteApp(app.id)}
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Delete
+                    </Button>
+                  </div>
                 </li>
               ))}
             </ul>

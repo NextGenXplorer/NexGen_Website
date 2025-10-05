@@ -62,6 +62,53 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// PUT update an app (admin only)
+export async function PUT(request: NextRequest) {
+  if (!(await verifyAdmin())) {
+    return new NextResponse(JSON.stringify({ message: 'Unauthorized' }), { status: 401 });
+  }
+
+  try {
+    const { id, name, description, logoUrl, downloadUrl } = await request.json();
+
+    if (!id) {
+      return NextResponse.json({ message: 'App ID is required.' }, { status: 400 });
+    }
+
+    if (!name || !logoUrl || !downloadUrl) {
+      return NextResponse.json({
+        message: 'App name, logo URL, and download URL are required.'
+      }, { status: 400 });
+    }
+
+    const appDoc = await adminDb.collection('apps').doc(id).get();
+    if (!appDoc.exists) {
+      return NextResponse.json({ message: 'App not found.' }, { status: 404 });
+    }
+
+    const updatedApp = {
+      name,
+      description: description || '',
+      logoUrl,
+      downloadUrl,
+      updatedAt: new Date(),
+    };
+
+    await adminDb.collection('apps').doc(id).update(updatedApp);
+
+    revalidatePath('/apps');
+
+    return NextResponse.json({ message: 'App updated successfully.' });
+  } catch (error: unknown) {
+    console.error('Error updating app:', error);
+    const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred.';
+    return NextResponse.json({
+      message: 'Failed to update app.',
+      error: errorMessage
+    }, { status: 500 });
+  }
+}
+
 // DELETE an app (admin only)
 export async function DELETE(request: NextRequest) {
   if (!(await verifyAdmin())) {
