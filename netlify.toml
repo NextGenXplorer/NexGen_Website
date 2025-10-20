@@ -4,17 +4,13 @@
 
 [build]
   # Build Next.js with API routes support
-  command = "next build"
-  # Netlify will automatically use .next for Next.js Runtime
-  publish = ".next"
+  command = "npm run build"
 
 # Environment configuration
 [build.environment]
   NODE_VERSION = "22"
   NEXT_TELEMETRY_DISABLED = "1"
 
-# Cache static assets
-[[headers]]
-  for = "/_next/static/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+# Netlify Next.js Runtime Plugin (automatically detected)
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
