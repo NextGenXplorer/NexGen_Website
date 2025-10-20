@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import { auth, db } from '@/lib/firebase';
 import { Spinner } from '@/components/ui/spinner';
 
 export default function AdminGuard({ children }: { children: React.ReactNode }) {
@@ -10,28 +13,27 @@ export default function AdminGuard({ children }: { children: React.ReactNode }) 
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const checkAuthStatus = async () => {
-      try {
-        const response = await fetch('/api/auth/status');
-        if (response.ok) {
-          const data = await response.json();
-          if (data.isAuthenticated) {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // Check if user is admin in Firestore
+        try {
+          const userDoc = await getDoc(doc(db, 'users', user.uid));
+          if (userDoc.exists() && userDoc.data()?.isAdmin === true) {
             setIsAuthorized(true);
           } else {
             router.push('/login');
           }
-        } else {
+        } catch (error) {
+          console.error('Failed to check admin status:', error);
           router.push('/login');
         }
-      } catch (error) {
-        console.error('Failed to check auth status:', error);
+      } else {
         router.push('/login');
-      } finally {
-        setIsLoading(false);
       }
-    };
+      setIsLoading(false);
+    });
 
-    checkAuthStatus();
+    return () => unsubscribe();
   }, [router]);
 
   if (isLoading) {
@@ -46,7 +48,5 @@ export default function AdminGuard({ children }: { children: React.ReactNode }) 
     return <>{children}</>;
   }
 
-  // User is not authorized, redirect has already been triggered.
-  // Return null to avoid rendering children during the redirect.
   return null;
 }

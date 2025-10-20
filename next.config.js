@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // ✅ Generate static site (no server-side rendering)
+  output: 'export',
+
   // ✅ Ignore TypeScript and ESLint build errors (optional)
   typescript: {
     ignoreBuildErrors: true,
@@ -8,7 +11,7 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
 
-  // ✅ Image optimization settings
+  // ✅ Disable image optimization (required for static export)
   images: {
     unoptimized: true,
     remotePatterns: [

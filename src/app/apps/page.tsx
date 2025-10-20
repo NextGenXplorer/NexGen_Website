@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { collection, query, orderBy, getDocs } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Download } from 'lucide-react';
@@ -21,10 +23,13 @@ export default function AppsPage() {
   useEffect(() => {
     const fetchApps = async () => {
       try {
-        const response = await fetch('/api/apps');
-        if (!response.ok) throw new Error('Failed to fetch apps');
-        const data = await response.json();
-        setApps(data);
+        const appsQuery = query(collection(db, 'apps'), orderBy('createdAt', 'desc'));
+        const snapshot = await getDocs(appsQuery);
+        const appsData = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as App[];
+        setApps(appsData);
       } catch (error) {
         console.error('Failed to load apps:', error);
       } finally {

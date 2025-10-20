@@ -1,12 +1,50 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { collection, query, orderBy, getDocs, where } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 import { VideoCard } from '@/components/video-card';
 import { socials } from '@/lib/content';
 import { Button } from '@/components/ui/button';
-import { Youtube } from 'lucide-react';
+import { Spinner } from '@/components/ui/spinner';
 import Link from 'next/link';
-import { getVideos } from '@/lib/content';
 
-export default async function YouTubePage() {
-  const videos = await getVideos();
+interface YouTubeVideo {
+  id: string;
+  youtubeId: string;
+  title: string;
+  description: string;
+  thumbnailUrl: string;
+  relatedLinks: { label: string; url: string }[];
+}
+
+export default function YouTubePage() {
+  const [videos, setVideos] = useState<YouTubeVideo[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchVideos = async () => {
+      try {
+        const videosQuery = query(
+          collection(db, 'videos'),
+          where('isPublic', '==', true),
+          orderBy('createdAt', 'desc')
+        );
+        const snapshot = await getDocs(videosQuery);
+        const videosData = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as YouTubeVideo[];
+        setVideos(videosData);
+      } catch (error) {
+        console.error('Failed to load videos:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchVideos();
+  }, []);
 
   const videoSummaries = videos.map((video) => {
     const summary = video.description
@@ -29,7 +67,11 @@ export default async function YouTubePage() {
         </p>
       </div>
 
-      {videos.length > 0 ? (
+      {isLoading ? (
+        <div className="flex justify-center py-16">
+          <Spinner size="large" />
+        </div>
+      ) : videos.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {videos.map((video) => (
             <VideoCard
@@ -50,8 +92,9 @@ export default async function YouTubePage() {
                 href={youtubeSocial.url}
                 target="_blank"
                 rel="noopener noreferrer"
+                className="inline-flex items-center"
               >
-                <Youtube className="mr-2 h-5 w-5" />
+                <youtubeSocial.Icon className="mr-2 h-5 w-5" />
                 Subscribe on YouTube
               </a>
             </Button>

@@ -3,7 +3,22 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { onAuthStateChanged, signOut, User } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import {
+  collection,
+  query,
+  orderBy,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  getDoc,
+  setDoc,
+  where,
+  Timestamp,
+  runTransaction
+} from 'firebase/firestore';
+import { auth, db } from '@/lib/firebase';
 import { formatYoutubeUrl } from '@/lib/utils';
 import AdminGuard from '@/components/auth/AdminGuard';
 import { Button } from '@/components/ui/button';
@@ -17,6 +32,10 @@ import { Switch } from '@/components/ui/switch';
 interface Video {
   id: string;
   youtubeUrl: string;
+  youtubeId: string;
+  title: string;
+  description: string;
+  thumbnailUrl: string;
   relatedLinks: { label: string; url: string }[];
   isPublic?: boolean;
 }
@@ -27,6 +46,13 @@ interface App {
   description: string;
   logoUrl: string;
   downloadUrl: string;
+}
+
+function getYouTubeId(url: string): string | null {
+  const regExp =
+    /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|watch\?v=)|(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|watch\?v%3D))([^#&?]*).*/;
+  const match = url.match(regExp);
+  return match && match[1].length === 11 ? match[1] : null;
 }
 
 function AdminPanel() {
@@ -60,50 +86,48 @@ function AdminPanel() {
 
   const fetchVisitorStats = useCallback(async () => {
     try {
-      const response = await fetch('/api/stats');
-      if (!response.ok) throw new Error('Failed to fetch stats');
-      const data = await response.json();
-      setVisitorCount(data.count);
+      const statsRef = doc(db, 'stats', 'visits');
+      const statsDoc = await getDoc(statsRef);
+      if (statsDoc.exists()) {
+        setVisitorCount(statsDoc.data()?.count || 0);
+      } else {
+        setVisitorCount(0);
+      }
     } catch (error) {
       console.error('Failed to load visitor stats:', error);
     }
   }, []);
 
-  const getAuthHeader = useCallback(async (): Promise<HeadersInit> => {
-    const headers: HeadersInit = {};
-    if (currentUser) {
-      const token = await currentUser.getIdToken();
-      headers['Authorization'] = `Bearer ${token}`;
-    }
-    return headers;
-  }, [currentUser]);
-
   const fetchVideos = useCallback(async () => {
     setIsLoading(true);
     try {
-      const headers = await getAuthHeader(); // ✅ Include admin token
-      const response = await fetch('/api/videos', { headers });
-      if (!response.ok) throw new Error('Failed to fetch videos');
-      const data = await response.json();
-      setVideos(data);
+      const videosQuery = query(collection(db, 'videos'), orderBy('createdAt', 'desc'));
+      const snapshot = await getDocs(videosQuery);
+      const videosData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Video[];
+      setVideos(videosData);
     } catch (error) {
       setError('Failed to load videos.');
     } finally {
       setIsLoading(false);
     }
-  }, [getAuthHeader]);
+  }, []);
 
   const fetchApps = useCallback(async () => {
     try {
-      const headers = await getAuthHeader();
-      const response = await fetch('/api/apps', { headers });
-      if (!response.ok) throw new Error('Failed to fetch apps');
-      const data = await response.json();
-      setApps(data);
+      const appsQuery = query(collection(db, 'apps'), orderBy('createdAt', 'desc'));
+      const snapshot = await getDocs(appsQuery);
+      const appsData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as App[];
+      setApps(appsData);
     } catch (error) {
       console.error('Failed to load apps:', error);
     }
-  }, [getAuthHeader]);
+  }, []);
 
   useEffect(() => {
     fetchVideos();
@@ -129,21 +153,44 @@ function AdminPanel() {
       setError('YouTube URL is required.');
       return;
     }
+
     try {
-      const headers = await getAuthHeader();
-      const response = await fetch('/api/videos', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...headers },
-        body: JSON.stringify({
-          youtubeUrl,
-          relatedLinks: relatedLinks.filter((l) => l.label && l.url),
-          isPublic,
-        }),
-      });
-      if (!response.ok) {
-        const { message } = await response.json();
-        throw new Error(message || 'Failed to add video');
+      const youtubeId = getYouTubeId(youtubeUrl);
+      if (!youtubeId) {
+        setError('Invalid YouTube URL.');
+        return;
       }
+
+      // Check for duplicates
+      const duplicateQuery = query(collection(db, 'videos'), where('youtubeId', '==', youtubeId));
+      const duplicateSnapshot = await getDocs(duplicateQuery);
+      if (!duplicateSnapshot.empty) {
+        setError('Video with this ID already exists.');
+        return;
+      }
+
+      // Fetch oEmbed details
+      const oembedResponse = await fetch(
+        `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${youtubeId}&format=json`
+      );
+      if (!oembedResponse.ok) {
+        throw new Error('Failed to fetch video details from YouTube.');
+      }
+      const oembedData = await oembedResponse.json();
+
+      const newVideo = {
+        youtubeUrl,
+        youtubeId,
+        title: oembedData.title,
+        description: oembedData.title,
+        thumbnailUrl: oembedData.thumbnail_url.replace('hqdefault.jpg', 'maxresdefault.jpg'),
+        relatedLinks: relatedLinks.filter((l) => l.label && l.url),
+        isPublic,
+        createdAt: Timestamp.now(),
+      };
+
+      await addDoc(collection(db, 'videos'), newVideo);
+
       setYoutubeUrl('');
       setRelatedLinks([{ label: '', url: '' }]);
       setIsPublic(true);
@@ -160,16 +207,7 @@ function AdminPanel() {
   const handleDelete = async (videoId: string) => {
     setError(null);
     try {
-      const headers = await getAuthHeader();
-      const response = await fetch('/api/videos', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json', ...headers },
-        body: JSON.stringify({ id: videoId }),
-      });
-      if (!response.ok) {
-        const { message } = await response.json();
-        throw new Error(message || 'Failed to delete video');
-      }
+      await deleteDoc(doc(db, 'videos', videoId));
       fetchVideos();
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -199,42 +237,26 @@ function AdminPanel() {
     }
     setIsUploadingApp(true);
     try {
-      const headers = await getAuthHeader();
-
       if (editingApp) {
         // Update existing app
-        const response = await fetch('/api/apps', {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json', ...headers },
-          body: JSON.stringify({
-            id: editingApp.id,
-            name: appName,
-            description: appDescription,
-            logoUrl: appLogoUrl,
-            downloadUrl: appDownloadUrl,
-          }),
+        const appRef = doc(db, 'apps', editingApp.id);
+        await updateDoc(appRef, {
+          name: appName,
+          description: appDescription,
+          logoUrl: appLogoUrl,
+          downloadUrl: appDownloadUrl,
+          updatedAt: Timestamp.now(),
         });
-        if (!response.ok) {
-          const { message } = await response.json();
-          throw new Error(message || 'Failed to update app');
-        }
         setEditingApp(null);
       } else {
         // Create new app
-        const response = await fetch('/api/apps', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', ...headers },
-          body: JSON.stringify({
-            name: appName,
-            description: appDescription,
-            logoUrl: appLogoUrl,
-            downloadUrl: appDownloadUrl,
-          }),
+        await addDoc(collection(db, 'apps'), {
+          name: appName,
+          description: appDescription,
+          logoUrl: appLogoUrl,
+          downloadUrl: appDownloadUrl,
+          createdAt: Timestamp.now(),
         });
-        if (!response.ok) {
-          const { message } = await response.json();
-          throw new Error(message || 'Failed to add app');
-        }
       }
 
       setAppName('');
@@ -274,16 +296,7 @@ function AdminPanel() {
   const handleDeleteApp = async (appId: string) => {
     setError(null);
     try {
-      const headers = await getAuthHeader();
-      const response = await fetch('/api/apps', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json', ...headers },
-        body: JSON.stringify({ id: appId }),
-      });
-      if (!response.ok) {
-        const { message } = await response.json();
-        throw new Error(message || 'Failed to delete app');
-      }
+      await deleteDoc(doc(db, 'apps', appId));
       fetchApps();
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -581,5 +594,4 @@ export default function AdminPage() {
       <AdminPanel />
     </AdminGuard>
   );
-    }
-    
+}
