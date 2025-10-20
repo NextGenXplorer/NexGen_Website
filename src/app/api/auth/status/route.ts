@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { cookies } from 'next/headers';
 
+export const dynamic = 'force-dynamic';
+
 interface AdminJwtPayload extends JwtPayload {
   isAdmin: boolean;
 }

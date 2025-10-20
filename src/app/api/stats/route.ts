@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
 import { verifyAdmin } from '@/lib/auth';
 
+export const dynamic = 'force-dynamic';
+
 const statsRef = adminDb.collection('stats').doc('visits');
 
 // GET visitor stats (admin only)

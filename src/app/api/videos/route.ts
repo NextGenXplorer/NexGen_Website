@@ -3,6 +3,8 @@ import { adminDb } from '@/lib/firebase-admin'; // Admin SDK
 import { verifyAdmin } from '@/lib/auth';
 import { revalidatePath } from 'next/cache';
 
+export const dynamic = 'force-dynamic';
+
 function getYouTubeId(url: string): string | null {
   const regExp =
     /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|watch\?v=)|(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|watch\?v%3D))([^#&?]*).*/;

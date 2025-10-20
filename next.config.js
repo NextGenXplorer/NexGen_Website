@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // ✅ Generate a completely static site (no Lambda functions)
-  output: 'export',
-
   // ✅ Ignore TypeScript and ESLint build errors (optional)
   typescript: {
     ignoreBuildErrors: true,
@@ -11,7 +8,7 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
 
-  // ✅ Disable Next.js image optimization (required for static export)
+  // ✅ Image optimization settings
   images: {
     unoptimized: true,
     remotePatterns: [

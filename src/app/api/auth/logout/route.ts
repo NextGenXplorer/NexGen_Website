@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { serialize } from 'cookie';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST() {
   // To logout, we clear the cookie by setting its maxAge to 0
   const cookie = serialize('admin_session', '', {

@@ -3,24 +3,18 @@
 # =========================
 
 [build]
-  # Build and export static HTML
-  command = "next build && next export"
-  # The folder containing the final static site
-  publish = "out"
+  # Build Next.js with API routes support
+  command = "next build"
+  # Netlify will automatically use .next for Next.js Runtime
+  publish = ".next"
 
-# Optional: enable caching for faster rebuilds
+# Environment configuration
 [build.environment]
   NODE_VERSION = "22"
   NEXT_TELEMETRY_DISABLED = "1"
 
-# Optional: long-term caching for static assets
+# Cache static assets
 [[headers]]
   for = "/_next/static/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
-
-# Optional: make sure Netlify uses your generated 404.html for not-found pages
-[[redirects]]
-  from = "/*"
-  to = "/404.html"
-  status = 404
