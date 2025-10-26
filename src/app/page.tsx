@@ -7,22 +7,24 @@ import { Code, BrainCircuit, Rocket, Users } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Typewriter } from '@/components/ui/typewriter';
+import { FluidSwirlShader } from '@/components/ui/fluid-swirl-shader';
 
 export default function Home() {
   return (
     <>
+      {/* Fluid Swirl Shader - Full Page Background */}
+      <div className="fixed inset-0 z-[-1]">
+        <FluidSwirlShader
+          intensity={0.36}
+          speed={1.0}
+          className="!fixed !inset-0"
+        />
+      </div>
+
       {/* Hero Section - Full Page */}
-      <section className="w-full h-screen relative overflow-hidden bg-gradient-to-br from-background via-background to-background/95">
-        {/* Animated Background - Pure CSS, No Lag */}
-        <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px_50px]" />
-
-        {/* Animated Gradient Orbs - GPU Accelerated */}
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40rem] h-[40rem] bg-primary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
-
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+      <section className="w-full h-screen relative overflow-hidden">
+        {/* Gradient Overlay for Content Readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent z-[1]" />
 
         {/* Content - Full Height Centered */}
         <div className="relative z-10 flex flex-col items-center justify-center h-full px-4 sm:px-6 lg:px-8">
@@ -44,8 +46,8 @@ export default function Home() {
             </h1>
 
             {/* Typewriter Tagline */}
-            <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl text-muted-foreground mb-8 sm:mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150 max-w-4xl mx-auto px-4 min-h-[3rem] sm:min-h-[4rem] flex flex-wrap items-center justify-center">
-              <span className="mr-2">Exploring</span>
+            <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl text-foreground mb-8 sm:mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150 max-w-4xl mx-auto px-4 min-h-[3rem] sm:min-h-[4rem] flex flex-wrap items-center justify-center">
+              <span className="mr-2 font-medium">Exploring</span>
               <Typewriter
                 text={[
                   "Artificial Intelligence",
@@ -79,7 +81,12 @@ export default function Home() {
         </div>
       </section>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 lg:py-24 animate-in fade-in duration-500">
+      {/* Content Section with Background Overlay */}
+      <div className="relative">
+        {/* Semi-transparent background for readability */}
+        <div className="absolute inset-0 bg-background/90 backdrop-blur-sm"></div>
+
+        <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 lg:py-24 animate-in fade-in duration-500">
 
       <section className="text-center mb-12 sm:mb-16 md:mb-20 lg:mb-24">
         <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black font-headline mb-4 sm:mb-6 bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/50">
@@ -127,6 +134,7 @@ export default function Home() {
         </Card>
       </section>
     </div>
+      </div>
     </>
   );
 }
