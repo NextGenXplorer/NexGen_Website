@@ -1,9 +1,12 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { channelInfo } from '@/lib/content';
 import { Code, BrainCircuit, Rocket } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Typewriter } from '@/components/ui/typewriter';
 
 export default function Home() {
   return (
@@ -22,9 +25,23 @@ export default function Home() {
           <h1 className="text-fluid-h1 font-black font-headline mb-4 bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400">
             NextGenXplorer
           </h1>
-          <p className="text-fluid-p text-muted-foreground max-w-3xl mx-auto mb-8">
-            Charting the course of tomorrow&apos;s technology, today.
-          </p>
+          <div className="text-fluid-p text-muted-foreground max-w-3xl mx-auto mb-8 min-h-[3rem] flex items-center justify-center">
+            <span className="mr-2">Exploring</span>
+            <Typewriter
+              text={[
+                "Artificial Intelligence",
+                "Quantum Computing",
+                "Space Technology",
+                "Future Innovations",
+                "Tomorrow's Technology"
+              ]}
+              speed={70}
+              className="text-primary font-semibold"
+              waitTime={2000}
+              deleteSpeed={40}
+              cursorChar="_"
+            />
+          </div>
           <div className="flex flex-col md:flex-row justify-center gap-4">
             <Button asChild size="lg" className="w-full md:w-auto">
               <Link href="/youtube">
