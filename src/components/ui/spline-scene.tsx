@@ -41,17 +41,18 @@ export function SplineScene({ scene, className }: SplineSceneProps) {
   }
 
   return (
-    <div className={className}>
+    <div className={`relative ${className}`}>
       {/* Theme-based overlay for visual adjustment */}
-      <div
-        className="absolute inset-0 pointer-events-none transition-opacity duration-500"
-        style={{
-          background: resolvedTheme === 'dark'
-            ? 'radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.3) 100%)'
-            : 'radial-gradient(circle at center, transparent 0%, rgba(255,255,255,0.1) 100%)',
-          opacity: mounted ? 1 : 0
-        }}
-      />
+      {mounted && (
+        <div
+          className="absolute inset-0 pointer-events-none transition-opacity duration-500"
+          style={{
+            background: resolvedTheme === 'dark'
+              ? 'radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.3) 100%)'
+              : 'radial-gradient(circle at center, transparent 0%, rgba(255,255,255,0.1) 100%)',
+          }}
+        />
+      )}
 
       <Suspense
         fallback={
