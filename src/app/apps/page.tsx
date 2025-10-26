@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Download } from 'lucide-react';
 import { Spinner } from '@/components/ui/spinner';
+import { Typewriter } from '@/components/ui/typewriter';
 
 interface App {
   id: string;
@@ -41,9 +42,23 @@ export default function AppsPage() {
 
   return (
     <div className="container mx-auto p-4 md:p-8">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-4">Apps</h1>
-        <p className="text-muted-foreground">
+      <div className="mb-8 text-center">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-headline mb-4 bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/50">
+          <Typewriter
+            text={[
+              "Our Apps",
+              "Download Tools",
+              "Mobile Apps",
+              "Get Started"
+            ]}
+            speed={70}
+            className="text-primary"
+            waitTime={3000}
+            deleteSpeed={40}
+            cursorChar="|"
+          />
+        </h1>
+        <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
           Download our apps and tools
         </p>
       </div>

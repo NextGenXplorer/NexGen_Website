@@ -1,8 +1,7 @@
 import { VideoCard } from '@/components/video-card';
-import { socials } from '@/lib/content';
+import { socials } from '@/lib/content-client';
 import { ButtonGradient } from '@/components/ui/button-gradient';
 import { Youtube } from 'lucide-react';
-import Link from 'next/link';
 import { getVideos } from '@/lib/content';
 
 export default async function YouTubePage() {
@@ -21,10 +20,10 @@ export default async function YouTubePage() {
   return (
     <div className="container mx-auto px-4 py-16 md:py-24 animate-in fade-in duration-500">
       <div className="text-center mb-12">
-        <h1 className="text-fluid-h2 font-bold font-headline mb-4">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-headline mb-4 bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/50">
           The Archives
         </h1>
-        <p className="text-fluid-p text-muted-foreground max-w-3xl mx-auto">
+        <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
           Explore our repository of deep dives into future-forward technologies and concepts.
         </p>
       </div>

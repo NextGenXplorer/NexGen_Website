@@ -1,14 +1,29 @@
+'use client';
+
 import { SocialCard } from '@/components/social-card';
-import { authors, socials } from '@/lib/content';
+import { authors, socials } from '@/lib/content-client';
+import { Typewriter } from '@/components/ui/typewriter';
 
 export default function SocialsPage() {
   return (
     <div className="container mx-auto px-4 py-16 md:py-24 animate-in fade-in duration-500">
       <div className="text-center mb-12">
-        <h1 className="text-fluid-h2 font-bold font-headline mb-4">
-          Connect With Us
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-headline mb-4 bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/50">
+          <Typewriter
+            text={[
+              "Connect With Us",
+              "Join Our Community",
+              "Follow Our Journey",
+              "Stay Connected"
+            ]}
+            speed={70}
+            className="text-primary"
+            waitTime={3000}
+            deleteSpeed={40}
+            cursorChar="|"
+          />
         </h1>
-        <p className="text-fluid-p text-muted-foreground max-w-3xl mx-auto">
+        <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
           Follow our journey and join the conversation on your favorite platforms.
         </p>
       </div>
