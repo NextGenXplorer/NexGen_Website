@@ -1,6 +1,5 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { ButtonGradient } from '@/components/ui/button-gradient';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { channelInfo } from '@/lib/content-client';
@@ -8,31 +7,26 @@ import { Code, BrainCircuit, Rocket, Users } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Typewriter } from '@/components/ui/typewriter';
-import { SplineScene } from '@/components/ui/spline-scene';
 
 export default function Home() {
   return (
     <>
-      {/* 3D Spline Scene Section - Full Screen Interactive Robot */}
-      <section className="w-full h-screen relative">
-        <SplineScene
-          scene="https://prod.spline.design/lSefSTX2E0yF-jLj/scene.splinecode"
-          className="w-full h-full"
-        />
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="text-center px-8 max-w-3xl">
-            <h2 className="text-4xl md:text-6xl font-black font-headline mb-4 text-white drop-shadow-2xl">
-              Welcome to the Future
-            </h2>
-            <p className="text-xl md:text-2xl text-white/90 drop-shadow-lg">
-              Explore the intersection of AI and innovation
-            </p>
-          </div>
+      {/* Hero Section */}
+      <section className="w-full h-screen relative bg-gradient-to-b from-background via-background/95 to-background flex items-center justify-center">
+        <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px_50px]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+        <div className="relative z-10 text-center px-8 max-w-4xl">
+          <h2 className="text-5xl md:text-7xl font-black font-headline mb-6 bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/50">
+            Welcome to the Future
+          </h2>
+          <p className="text-xl md:text-3xl text-muted-foreground mb-8">
+            Explore the intersection of AI and innovation
+          </p>
         </div>
       </section>
 
       <div className="container mx-auto px-4 py-16 md:py-24 animate-in fade-in duration-500">
-      <section className="text-center mb-24 md:mb-32">
+      <section className="text-center mb-16 md:mb-24">
         <div className="relative z-10 flex flex-col items-center">
           <Image
             src="https://avatars.githubusercontent.com/u/223625668?s=400&u=3760cffbf5cec0e95bc14deac3725202dfa2eb8e&v=4"
