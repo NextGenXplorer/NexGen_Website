@@ -7,26 +7,30 @@ import { Code, BrainCircuit, Rocket, Users } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Typewriter } from '@/components/ui/typewriter';
-import { SplineScene } from '@/components/ui/spline-scene';
 
 export default function Home() {
   return (
     <>
-      {/* 3D Spline Scene Section - Full Screen Interactive Robot */}
-      <section className="w-full h-screen relative overflow-hidden">
-        <SplineScene
-          scene="https://prod.spline.design/lSefSTX2E0yF-jLj/scene.splinecode"
-          className="w-full h-full"
-        />
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
-          <div className="text-center px-8 max-w-3xl">
-            <h2 className="text-4xl md:text-6xl font-black font-headline mb-4 text-white drop-shadow-2xl">
+      {/* Hero Section with Animated Background */}
+      <section className="w-full h-screen relative overflow-hidden bg-gradient-to-br from-background via-background to-background/95">
+        {/* Animated Grid Background */}
+        <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px_50px]" />
+
+        {/* Gradient Overlays */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/20 rounded-full blur-3xl animate-pulse delay-700" />
+
+        {/* Content */}
+        <div className="relative z-10 flex items-center justify-center h-full">
+          <div className="text-center px-8 max-w-4xl">
+            <h2 className="text-5xl md:text-7xl font-black font-headline mb-6 bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/50 animate-in fade-in slide-in-from-bottom-4 duration-700">
               Welcome to the Future
             </h2>
-            <p className="text-xl md:text-2xl text-white/90 drop-shadow-lg mb-8">
+            <p className="text-xl md:text-3xl text-muted-foreground mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150">
               Explore the intersection of AI and innovation
             </p>
-            <div className="flex flex-col md:flex-row justify-center gap-4 pointer-events-auto">
+            <div className="flex flex-col md:flex-row justify-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
               <Link href="/youtube">
                 <ButtonGradient className="w-full md:w-auto" icon={<Rocket className="w-3.5 h-3.5" />}>
                   Begin Exploration
