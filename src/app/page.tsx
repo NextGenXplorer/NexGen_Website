@@ -13,19 +13,19 @@ import { SplineScene } from '@/components/ui/spline-scene';
 export default function Home() {
   return (
     <>
-      {/* 3D Spline Scene Section - Full Screen Interactive */}
+      {/* 3D Spline Scene Section - Full Screen Interactive Robot */}
       <section className="w-full h-screen relative">
         <SplineScene
-          scene="https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode"
+          scene="https://prod.spline.design/lSefSTX2E0yF-jLj/scene.splinecode"
           className="w-full h-full"
         />
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="text-center px-8 max-w-3xl">
             <h2 className="text-4xl md:text-6xl font-black font-headline mb-4 text-white drop-shadow-2xl">
-              Experience the Future
+              Welcome to the Future
             </h2>
             <p className="text-xl md:text-2xl text-white/90 drop-shadow-lg">
-              Interact with cutting-edge 3D technology
+              Explore the intersection of AI and innovation
             </p>
           </div>
         </div>
