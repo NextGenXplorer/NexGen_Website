@@ -40,19 +40,27 @@ export function SplineScene({ scene, className }: SplineSceneProps) {
     setSplineApp(spline)
   }
 
+  if (!mounted) {
+    return (
+      <div className={`relative ${className}`}>
+        <div className="w-full h-full flex items-center justify-center bg-background">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className={`relative ${className}`}>
       {/* Theme-based overlay for visual adjustment */}
-      {mounted && (
-        <div
-          className="absolute inset-0 pointer-events-none transition-opacity duration-500"
-          style={{
-            background: resolvedTheme === 'dark'
-              ? 'radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.3) 100%)'
-              : 'radial-gradient(circle at center, transparent 0%, rgba(255,255,255,0.1) 100%)',
-          }}
-        />
-      )}
+      <div
+        className="absolute inset-0 pointer-events-none transition-opacity duration-500 z-10"
+        style={{
+          background: resolvedTheme === 'dark'
+            ? 'radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.3) 100%)'
+            : 'radial-gradient(circle at center, transparent 0%, rgba(255,255,255,0.1) 100%)',
+        }}
+      />
 
       <Suspense
         fallback={
