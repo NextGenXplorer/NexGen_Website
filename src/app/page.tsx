@@ -7,30 +7,30 @@ import { Code, BrainCircuit, Rocket, Users } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Typewriter } from '@/components/ui/typewriter';
-import { SplineScene } from '@/components/ui/spline-scene';
 
 export default function Home() {
   return (
     <>
-      {/* Hero Section with 3D Robot - Fully Responsive */}
-      <section className="w-full min-h-screen h-screen relative overflow-hidden bg-black/[0.96]">
-        {/* Spline 3D Scene - Responsive */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-full h-full">
-            <SplineScene
-              scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </div>
+      {/* Hero Section - Lightweight & Fast */}
+      <section className="w-full min-h-screen h-screen relative overflow-hidden bg-gradient-to-br from-background via-background to-background/95">
+        {/* Animated Background - Pure CSS, No Lag */}
+        <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px_50px]" />
 
-        {/* Content Overlay - Responsive Text & Buttons */}
-        <div className="relative z-10 flex items-center justify-center min-h-screen h-full bg-gradient-to-t from-black/60 via-transparent to-transparent px-4 sm:px-6 lg:px-8">
+        {/* Animated Gradient Orbs - GPU Accelerated */}
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40rem] h-[40rem] bg-primary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+
+        {/* Content - Responsive Text & Buttons */}
+        <div className="relative z-10 flex items-center justify-center min-h-screen h-full px-4 sm:px-6 lg:px-8">
           <div className="text-center w-full max-w-7xl mx-auto py-8">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black font-headline mb-4 sm:mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-400 animate-in fade-in slide-in-from-bottom-4 duration-700 leading-tight">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black font-headline mb-4 sm:mb-6 bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/50 animate-in fade-in slide-in-from-bottom-4 duration-700 leading-tight">
               Welcome to the Future
             </h2>
-            <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-white/80 mb-6 sm:mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150 max-w-4xl mx-auto px-4">
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-muted-foreground mb-6 sm:mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150 max-w-4xl mx-auto px-4">
               Explore the intersection of AI and innovation
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 px-4">
