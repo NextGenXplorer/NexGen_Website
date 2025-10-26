@@ -13,6 +13,7 @@ export function SplineScene({ scene, className }: SplineSceneProps) {
   const { resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const [splineApp, setSplineApp] = useState<any>(null)
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -40,11 +41,26 @@ export function SplineScene({ scene, className }: SplineSceneProps) {
     setSplineApp(spline)
   }
 
+  function onError() {
+    console.error('Failed to load Spline scene')
+    setError(true)
+  }
+
   if (!mounted) {
     return (
       <div className={`relative ${className}`}>
         <div className="w-full h-full flex items-center justify-center bg-background">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className={`relative ${className}`}>
+        <div className="w-full h-full flex items-center justify-center bg-background">
+          <p className="text-muted-foreground">Unable to load 3D scene</p>
         </div>
       </div>
     )
@@ -72,6 +88,7 @@ export function SplineScene({ scene, className }: SplineSceneProps) {
         <Spline
           scene={scene}
           onLoad={onLoad}
+          onError={onError}
           className="w-full h-full"
         />
       </Suspense>
