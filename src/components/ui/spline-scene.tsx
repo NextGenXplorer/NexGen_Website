@@ -1,8 +1,17 @@
 'use client'
 
-import { Suspense, lazy, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTheme } from 'next-themes'
-const Spline = lazy(() => import('@splinetool/react-spline'))
+import dynamic from 'next/dynamic'
+
+const Spline = dynamic(() => import('@splinetool/react-spline'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full flex items-center justify-center bg-background">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+    </div>
+  ),
+})
 
 interface SplineSceneProps {
   scene: string
@@ -12,39 +21,11 @@ interface SplineSceneProps {
 export function SplineScene({ scene, className }: SplineSceneProps) {
   const { resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
-  const [splineApp, setSplineApp] = useState<any>(null)
   const [error, setError] = useState(false)
 
   useEffect(() => {
     setMounted(true)
   }, [])
-
-  // Update Spline scene when theme changes
-  useEffect(() => {
-    if (splineApp && mounted) {
-      try {
-        // Try to find and update theme-related objects in the scene
-        const isDark = resolvedTheme === 'dark'
-
-        // You can trigger events or update variables in Spline
-        splineApp.emitEvent('mouseDown', isDark ? 'dark' : 'light')
-
-        // Alternative: Update specific objects if they exist
-        // splineApp.setVariable('theme', isDark ? 'dark' : 'light')
-      } catch (error) {
-        console.log('Spline theme update not available for this scene')
-      }
-    }
-  }, [resolvedTheme, splineApp, mounted])
-
-  function onLoad(spline: any) {
-    setSplineApp(spline)
-  }
-
-  function onError() {
-    console.error('Failed to load Spline scene')
-    setError(true)
-  }
 
   if (!mounted) {
     return (
@@ -78,20 +59,11 @@ export function SplineScene({ scene, className }: SplineSceneProps) {
         }}
       />
 
-      <Suspense
-        fallback={
-          <div className="w-full h-full flex items-center justify-center bg-background">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-          </div>
-        }
-      >
-        <Spline
-          scene={scene}
-          onLoad={onLoad}
-          onError={onError}
-          className="w-full h-full"
-        />
-      </Suspense>
+      <Spline
+        scene={scene}
+        onError={() => setError(true)}
+        style={{ width: '100%', height: '100%' }}
+      />
     </div>
   )
 }

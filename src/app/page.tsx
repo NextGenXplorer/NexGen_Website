@@ -7,6 +7,7 @@ import { Code, BrainCircuit, Rocket, Users } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Typewriter } from '@/components/ui/typewriter';
+import { SplineScene } from '@/components/ui/spline-scene';
 
 export default function Home() {
   return (
