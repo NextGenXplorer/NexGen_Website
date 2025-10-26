@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { channelInfo } from '@/lib/content';
+import { channelInfo } from '@/lib/content-client';
 import { Code, BrainCircuit, Rocket, Cpu, Zap } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
