@@ -29,6 +29,16 @@
       "name": "Telegram Channel",
       "url": "https://t.me/neXgenXplorerr",
       "handle": "Community Channel"
+    },
+    {
+      "name": "WhatsApp Channel",
+      "url": "https://whatsapp.com/channel/0029VaU05uG9RZAeiXKyEu06",
+      "handle": "WhatsApp Channel"
+    },
+    {
+      "name": "Google Play Store",
+      "url": "https://play.google.com/store/apps/dev?id=8262374975871504599",
+      "handle": "Our Apps"
     }
   ],
   "authors": [

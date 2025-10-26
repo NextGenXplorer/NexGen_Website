@@ -1,4 +1,4 @@
-import { Instagram, Github, Youtube, LucideIcon, Send } from 'lucide-react';
+import { Instagram, Github, Youtube, LucideIcon, Send, MessageCircle, Smartphone } from 'lucide-react';
 import content from '../data/content.json';
 import { notFound } from 'next/navigation';
 import { adminDb } from './firebase-admin';
@@ -31,6 +31,8 @@ const iconMap: { [key: string]: LucideIcon } = {
   Telegram: Send,
   'Telegram Group': Send,
   'Telegram Channel': Send,
+  'WhatsApp Channel': MessageCircle,
+  'Google Play Store': Smartphone,
 };
 
 const authorIconMap: { [key: string]: LucideIcon } = {
