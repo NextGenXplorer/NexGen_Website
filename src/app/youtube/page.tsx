@@ -1,6 +1,6 @@
 import { VideoCard } from '@/components/video-card';
 import { socials } from '@/lib/content';
-import { Button } from '@/components/ui/button';
+import { ButtonGradient } from '@/components/ui/button-gradient';
 import { Youtube } from 'lucide-react';
 import Link from 'next/link';
 import { getVideos } from '@/lib/content';
@@ -45,16 +45,16 @@ export default async function YouTubePage() {
             No videos available at the moment.
           </p>
           {youtubeSocial && (
-            <Button asChild size="lg">
-              <a
-                href={youtubeSocial.url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Youtube className="mr-2 h-5 w-5" />
+            <a
+              href={youtubeSocial.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block"
+            >
+              <ButtonGradient icon={<Youtube className="w-3.5 h-3.5" />}>
                 Subscribe on YouTube
-              </a>
-            </Button>
+              </ButtonGradient>
+            </a>
           )}
         </div>
       )}

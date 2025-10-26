@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
+import { ButtonGradient } from '@/components/ui/button-gradient';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -62,9 +62,9 @@ export default function LoginPage() {
               />
             </div>
             {error && <p className="text-sm text-red-500 text-center">{error}</p>}
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <ButtonGradient type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? 'Logging in...' : 'Login'}
-            </Button>
+            </ButtonGradient>
           </form>
         </CardContent>
       </Card>

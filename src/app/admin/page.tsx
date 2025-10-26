@@ -6,6 +6,7 @@ import { onAuthStateChanged, signOut, User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { formatYoutubeUrl } from '@/lib/utils';
 import AdminGuard from '@/components/auth/AdminGuard';
+import { ButtonGradient } from '@/components/ui/button-gradient';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -378,9 +379,9 @@ function AdminPanel() {
                   </Button>
                 </div>
               ))}
-              <Button type="button" variant="outline" onClick={handleAddLink}>
+              <ButtonGradient type="button" onClick={handleAddLink}>
                 Add Another Link
-              </Button>
+              </ButtonGradient>
             </div>
 
             {/* Public/Private toggle */}
@@ -393,7 +394,7 @@ function AdminPanel() {
             </div>
 
             {error && <p className="text-red-500">{error}</p>}
-            <Button type="submit">Add Video</Button>
+            <ButtonGradient type="submit">Add Video</ButtonGradient>
           </form>
         </CardContent>
       </Card>
@@ -494,7 +495,7 @@ function AdminPanel() {
             </div>
 
             <div className="flex gap-2">
-              <Button type="submit" disabled={isUploadingApp}>
+              <ButtonGradient type="submit" disabled={isUploadingApp}>
                 {isUploadingApp ? (
                   <>
                     <Spinner className="h-4 w-4 mr-2" />
@@ -503,7 +504,7 @@ function AdminPanel() {
                 ) : (
                   editingApp ? 'Update App' : 'Add App'
                 )}
-              </Button>
+              </ButtonGradient>
               {editingApp && (
                 <Button
                   type="button"
