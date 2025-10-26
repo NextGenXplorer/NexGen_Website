@@ -65,7 +65,7 @@ export default function Navbar() {
             data-ai-hint="logo"
             priority
           />
-          <span className="text-xl font-bold font-headline">NextGenXplorer</span>
+          <span className="text-xl font-bold font-headline">NextGenX</span>
         </Link>
         {isMobile ? (
           <>
@@ -88,7 +88,7 @@ export default function Navbar() {
                       className="rounded-full"
                       data-ai-hint="logo"
                     />
-                    <span className="text-lg font-bold font-headline">NextGenXplorer</span>
+                    <span className="text-lg font-bold font-headline">NextGenX</span>
                   </SheetTitle>
                 </SheetHeader>
                 <nav className="flex flex-col items-center gap-4 mt-8">
