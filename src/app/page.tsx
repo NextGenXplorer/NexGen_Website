@@ -3,14 +3,56 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { channelInfo } from '@/lib/content';
-import { Code, BrainCircuit, Rocket } from 'lucide-react';
+import { Code, BrainCircuit, Rocket, Cpu, Zap } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Typewriter } from '@/components/ui/typewriter';
+import { LightningSplit } from '@/components/ui/lightning-split';
 
 export default function Home() {
   return (
-    <div className="container mx-auto px-4 py-16 md:py-24 animate-in fade-in duration-500">
+    <>
+      {/* Lightning Split Section - Full Screen Interactive */}
+      <section className="w-full">
+        <LightningSplit
+          leftComponent={
+            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-blue-950 via-blue-900 to-indigo-950 relative overflow-hidden">
+              <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f46e510_1px,transparent_1px),linear-gradient(to_bottom,#4f46e510_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
+              <div className="relative z-10 text-center px-8 max-w-2xl">
+                <Code className="mx-auto h-24 w-24 text-blue-400 mb-6" />
+                <h2 className="text-5xl md:text-6xl font-black font-headline mb-6 text-white">
+                  Technology
+                </h2>
+                <p className="text-xl md:text-2xl text-blue-200 mb-4">
+                  Cutting-edge innovations
+                </p>
+                <p className="text-lg text-blue-300/80">
+                  Exploring AI, Quantum Computing, Space Tech, and the frontiers of human innovation
+                </p>
+              </div>
+            </div>
+          }
+          rightComponent={
+            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-purple-950 via-purple-900 to-fuchsia-950 relative overflow-hidden">
+              <div className="absolute inset-0 bg-[linear-gradient(to_right,#a855f710_1px,transparent_1px),linear-gradient(to_bottom,#a855f710_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
+              <div className="relative z-10 text-center px-8 max-w-2xl">
+                <Cpu className="mx-auto h-24 w-24 text-purple-400 mb-6" />
+                <h2 className="text-5xl md:text-6xl font-black font-headline mb-6 text-white">
+                  Future
+                </h2>
+                <p className="text-xl md:text-2xl text-purple-200 mb-4">
+                  Tomorrow's possibilities
+                </p>
+                <p className="text-lg text-purple-300/80">
+                  Decoding the technological forces reshaping our world and defining humanity's next chapter
+                </p>
+              </div>
+            </div>
+          }
+        />
+      </section>
+
+      <div className="container mx-auto px-4 py-16 md:py-24 animate-in fade-in duration-500">
       <section className="text-center mb-24 md:mb-32">
         <div className="relative z-10 flex flex-col items-center">
           <Image
@@ -80,6 +122,7 @@ export default function Home() {
         </Card>
       </section>
     </div>
+    </>
   );
-          }
-      
+}
+
