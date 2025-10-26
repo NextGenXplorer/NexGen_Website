@@ -1,9 +1,10 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { ButtonGradient } from '@/components/ui/button-gradient';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { channelInfo } from '@/lib/content-client';
-import { Code, BrainCircuit, Rocket } from 'lucide-react';
+import { Code, BrainCircuit, Rocket, Users } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Typewriter } from '@/components/ui/typewriter';
@@ -63,14 +64,16 @@ export default function Home() {
             />
           </div>
           <div className="flex flex-col md:flex-row justify-center gap-4">
-            <Button asChild size="lg" className="w-full md:w-auto">
-              <Link href="/youtube">
-                <Rocket className="mr-2 h-5 w-5" /> Begin Exploration
-              </Link>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="w-full md:w-auto">
-              <Link href="/socials">Join the Collective</Link>
-            </Button>
+            <Link href="/youtube">
+              <ButtonGradient className="w-full md:w-auto" icon={<Rocket className="w-3.5 h-3.5" />}>
+                Begin Exploration
+              </ButtonGradient>
+            </Link>
+            <Link href="/socials">
+              <ButtonGradient className="w-full md:w-auto" icon={<Users className="w-3.5 h-3.5" />}>
+                Join the Collective
+              </ButtonGradient>
+            </Link>
           </div>
         </div>
       </section>
