@@ -12,17 +12,33 @@ import { SplineScene } from '@/components/ui/spline-scene';
 export default function Home() {
   return (
     <>
-      {/* Hero Section */}
-      <section className="w-full h-screen relative bg-gradient-to-b from-background via-background/95 to-background flex items-center justify-center">
-        <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px_50px]" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
-        <div className="relative z-10 text-center px-8 max-w-4xl">
-          <h2 className="text-5xl md:text-7xl font-black font-headline mb-6 bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/50">
-            Welcome to the Future
-          </h2>
-          <p className="text-xl md:text-3xl text-muted-foreground mb-8">
-            Explore the intersection of AI and innovation
-          </p>
+      {/* 3D Spline Scene Section - Full Screen Interactive Robot */}
+      <section className="w-full h-screen relative overflow-hidden">
+        <SplineScene
+          scene="https://prod.spline.design/lSefSTX2E0yF-jLj/scene.splinecode"
+          className="w-full h-full"
+        />
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
+          <div className="text-center px-8 max-w-3xl">
+            <h2 className="text-4xl md:text-6xl font-black font-headline mb-4 text-white drop-shadow-2xl">
+              Welcome to the Future
+            </h2>
+            <p className="text-xl md:text-2xl text-white/90 drop-shadow-lg mb-8">
+              Explore the intersection of AI and innovation
+            </p>
+            <div className="flex flex-col md:flex-row justify-center gap-4 pointer-events-auto">
+              <Link href="/youtube">
+                <ButtonGradient className="w-full md:w-auto" icon={<Rocket className="w-3.5 h-3.5" />}>
+                  Begin Exploration
+                </ButtonGradient>
+              </Link>
+              <Link href="/socials">
+                <ButtonGradient className="w-full md:w-auto" icon={<Users className="w-3.5 h-3.5" />}>
+                  Join the Collective
+                </ButtonGradient>
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 
