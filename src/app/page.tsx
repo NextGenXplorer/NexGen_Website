@@ -17,7 +17,7 @@ export default function Home() {
         {/* Spline 3D Scene */}
         <div className="absolute inset-0">
           <SplineScene
-            scene="https://prod.spline.design/lSefSTX2E0yF-jLj/scene.splinecode"
+            scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
             className="w-full h-full"
           />
         </div>
