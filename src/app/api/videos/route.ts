@@ -15,9 +15,10 @@ export async function GET() {
   try {
     const isAdmin = await verifyAdmin();
 
+    // Fetch videos without orderBy to avoid needing composite index
     const videosQuery = isAdmin
-      ? adminDb.collection('videos').orderBy('createdAt', 'desc')
-      : adminDb.collection('videos').where('isPublic', '==', true).orderBy('createdAt', 'desc');
+      ? adminDb.collection('videos')
+      : adminDb.collection('videos').where('isPublic', '==', true);
 
     const snapshot = await videosQuery.get();
 
@@ -25,6 +26,13 @@ export async function GET() {
       id: doc.id,
       ...doc.data(),
     }));
+
+    // Sort by createdAt in memory
+    videos.sort((a: any, b: any) => {
+      const dateA = a.createdAt?.toDate?.() || new Date(0);
+      const dateB = b.createdAt?.toDate?.() || new Date(0);
+      return dateB.getTime() - dateA.getTime();
+    });
 
     return NextResponse.json(videos);
   } catch (error) {
